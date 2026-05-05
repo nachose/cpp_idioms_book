@@ -1,0 +1,28 @@
+# Checklist for Publishing a book.
+
+- [ ] Generate book outline and chapter outlines.
+- [ ] Create book repository.
+- [ ] Create develop branch and check it out.
+- [ ] Create worktree dir, and add worktree to main branch.
+- [ ] Copy files from template.
+- [ ] Add outlines to github repo.
+- [ ] Rename chapter files if needed.
+- [ ] If needed, create part files.
+- [ ] Modify makefile.
+- [ ] Modify book metadata.
+- [ ] Make continuous integration work.
+- [ ] Generate content of chapters.
+- [ ] Change preface. This is important.
+- [ ] If needed, generate images/diagrams.
+- [ ] Generate book cover.
+- [ ] Create book description.
+- [ ] Fill in book metadata in kdp.
+- [ ] Review formatting.
+- [ ] Review hallucinations.
+- [ ] Review spelling.
+- [ ] Review the author is the right one.
+- [ ] Upload content/book cover to kdp.
+- [ ] Need to add more examples?
+- [ ] Publish book.
+- [ ] Reading review.
+- [ ] Review to add more examples.

@@ -1,0 +1,17 @@
+title: "C++ for Low-Latency Systems"
+pagetitle: "C++ for Low-Latency Systems"
+author: "Jose Ignacio Seco Sanz"
+language: "en"
+rights: |
+    Copyright © 2026 Jose Ignacio Seco Sanz.
+    This work was generated with the assistance of AI tools. 
+    Human editorial control was applied to ensure technical accuracy.
+ai-origin: "true"
+# Added through makefile
+# identifier: "urn:uuid:$(uuidgen)"
+publisher: "Jose Ignacio Seco Sanz"
+# cover-image: cover.png    # Optional: provide a 1600x2560 cover if you want
+
+# author: "Rainer Sanchez Navarro"
+# author: "Anke Martinez Vargas"
+# author: "Eloise Laterre Leclair"

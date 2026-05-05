@@ -1,0 +1,31 @@
+# Git && GitHub
+.git
+.github
+
+# IDE and editor config
+.idea
+.vscode
+
+# Generated files
+tags
+spell_report.txt
+
+# Build artifacts
+my-ebook/*.epub
+my-ebook/*.log
+my-ebook/*.pdf
+my-ebook/make_pdf
+my-ebook/.formatted
+
+#Agents instructions.
+my-ebook/AGENTS.md
+my-ebook/GEMINI.md
+
+# Files not needed in the image
+Dockerfile*
+docker-compose.yml
+README.md
+Checklist.md
+TODO.txt
+prompts_used.txt
+

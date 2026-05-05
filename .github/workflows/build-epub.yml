@@ -1,0 +1,161 @@
+name: Build EPUB via Docker Compose
+
+on:
+  workflow_dispatch:
+  # push:
+  #   paths:
+  #     - '**/*'
+  #   branches:
+  #     - main
+
+env:
+  BOOK_NAME: sf_history
+
+concurrency:
+  group: book-build
+  cancel-in-progress: true
+
+jobs:
+  build-epub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Docker Compose
+        uses: docker/setup-buildx-action@v4
+
+      - name: Run Docker Compose to build EPUB
+        run: |
+          docker compose run book-builder-epub
+
+      # Optional: Upload the EPUB file as an artifact
+      - name: Upload first EPUB artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: epub_${{ env.BOOK_NAME }}
+          path: my-ebook/${{ env.BOOK_NAME }}.epub # <-- Update this to your actual EPUB file path
+
+  validate-epub:
+    runs-on: ubuntu-latest
+    needs: build-epub
+    steps:
+      - name: Download EPUB artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: epub_${{ env.BOOK_NAME }}
+          path: ./epub-artifacts
+
+
+      - name: Download epubcheck
+        run: |
+          wget https://github.com/w3c/epubcheck/releases/download/v5.0.0/epubcheck-5.0.0.zip
+          unzip epubcheck-5.0.0.zip
+
+      - name: Run epubcheck on first book
+        run: |
+          java -jar epubcheck-5.0.0/epubcheck.jar ./epub-artifacts/${{ env.BOOK_NAME }}.epub
+
+
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Docker Compose
+        uses: docker/setup-buildx-action@v4
+
+      - name: Run Docker Compose to build PDF
+        run: |
+          docker compose run book-builder-pdf
+
+      # Optional: Upload the PDF file as an artifact
+      - name: Upload first PDF artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: pdf_${{ env.BOOK_NAME }}
+          path: my-ebook/${{ env.BOOK_NAME }}.pdf # <-- Update this to your actual PDF file path
+
+      - name: Debug — show where files are after build
+        run: |
+          echo "Workspace root:"
+          ls -la
+          echo "Check common dirs:"
+          ls -la my-ebook || true
+          ls -la my-ebooks || true
+          echo "Find generated pdfs:"
+          find . -type f -name '${{ env.BOOK_NAME }}*' -maxdepth 6 || true
+
+  validate-pdf:
+    runs-on: ubuntu-latest
+    needs: build-pdf
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        
+      - name: Install pdfinfo
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils ghostscript
+
+
+      - name: Download pdf artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: pdf_${{ env.BOOK_NAME }}
+          path: ./pdf-artifacts
+
+      # - name: Download the other pdf artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: pdf_second_book
+      #     path: ./pdf-artifacts
+
+      - name: Debug — show where files are after build
+        run: |
+          echo "Workspace root:"
+          ls -la
+          echo "Check common dirs:"
+          ls -la my-ebook || true
+          ls -la my-ebooks || true
+          echo "Find generated pdfs:"
+          find . -type f -name '${{ env.BOOK_NAME }}*' -maxdepth 6 || true
+
+
+      - name: Run pdf check
+        run: |
+          set +e
+          .github/scripts/check-print-pdf.sh ./pdf-artifacts/${{ env.BOOK_NAME }}.pdf
+          echo "pdf check completed (warnings allowed)"
+          set -e
+
+      # - name: Upload pdf report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: spell-report
+      #     path: spell_report.txt
+  build-docx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Docker Compose
+        uses: docker/setup-buildx-action@v4
+
+      - name: Run Docker Compose to build DOCX
+        run: |
+          docker compose run book-builder-docx
+
+      # Optional: Upload the EPUB file as an artifact
+      - name: Upload first DOCX artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: docx_first_book
+          path: my-ebook/${{ env.BOOK_NAME }}.docx # <-- Update this to your actual EPUB file path
+
+      # Optional: Upload the EPUB file as an artifact
+      # - name: Upload second EPUB artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: epub_second_book
+      #     path: my-ebook/cpp_low_latency2.epub # <-- Update this to your actual EPUB file path

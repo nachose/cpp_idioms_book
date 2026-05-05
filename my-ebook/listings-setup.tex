@@ -1,0 +1,28 @@
+% Force Pandoc to use listings instead of verbatim/fancyvrb for code blocks
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+
+% Apply footnotesize to all longtable environments
+\AtBeginEnvironment{longtable}{\footnotesize}
+
+\lstset{
+	showspaces=false,
+	showtabs=false,
+	showstringspaces=false,
+	breaklines=true,
+	breakatwhitespace=false,
+	keepspaces=true,
+	prebreak=\mbox{\textcolor{red}{\hookrightarrow}\ },
+	postbreak=\mbox{\textcolor{red}{\hookrightarrow}\ },
+	basicstyle=\ttfamily\small,
+	columns=fullflexible,
+	% Optional: make it look a bit nicer
+	frame=lines,
+	framerule=0.5pt,
+	rulecolor=\color{gray!30},
+	backgroundcolor=\color{gray!10},
+	% Tell Pandoc to use listings for all code blocks
+	language=
+}
+

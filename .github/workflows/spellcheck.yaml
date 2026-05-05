@@ -1,0 +1,42 @@
+name: Spell Check
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
+
+concurrency:
+  group: book-build
+  cancel-in-progress: true
+
+jobs:
+  spellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install aspell
+        run: sudo apt-get update && sudo apt-get install -y aspell aspell-en
+
+      - name: Download personal dictionary
+        run: |
+          git clone --depth=1 https://github.com/nachose/nacho-personal-dict.git
+          cp nacho-personal-dict/.aspell.en.pws .
+
+
+      - name: Run spell check
+        run: |
+          set +e
+          .github/scripts/spellcheck.sh
+          echo "Spell check completed (warnings allowed)"
+          set -e
+
+      - name: Upload spell report
+        uses: actions/upload-artifact@v6
+        with:
+          name: spell-report
+          path: spell_report.txt

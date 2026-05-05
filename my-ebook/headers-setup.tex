@@ -1,0 +1,19 @@
+\usepackage{fancyhdr}
+\usepackage[fit,breakall]{truncate} % fit keeps natural positioning, breakall allows mid-word truncate if needed
+\usepackage[htt]{hyphenat} % Allow hyphenation in typewriter font for inline code
+\usepackage{fontspec} 
+
+\pagestyle{fancy}
+\fancyhf{} % clear defaults
+% Adjust to match your current style (chapter on even, section on odd)
+\fancyhead[LE]{\truncate{\headwidth}{\leftmark}} % Even pages: chapter (left)
+\fancyhead[RO]{\truncate{\headwidth}{\rightmark}} % Odd pages: section (right)
+\fancyfoot[C]{\thepage} % Optional: page number centered in footer
+
+% 1. Allow the engine to be "sloppy" with spacing to keep text inside margins
+\sloppy
+\setlength{\emergencystretch}{10em}
+
+% 2. Load the URL package with the 'hyphens' option to handle long strings
+\usepackage[hyphens]{url}
+

@@ -1,0 +1,10 @@
+\usepackage{newunicodechar}
+
+% 1. Map the character to a robust command that doesn't rely on math mode
+% We use \fontspec to ensure the character is rendered with a specific font.
+\newunicodechar{↪}{{\fontspec{DejaVu Sans Mono}↪}}
+
+% 2. If you are using code blocks that wrap, 
+% force the fvextra package to use this character correctly
+% \usepackage{fvextra}
+% \DeclareRobustCommand{\fancyvrbbreakarrowleft}{\fontspec{DejaVu Sans Mono}↪}

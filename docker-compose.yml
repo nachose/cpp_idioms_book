@@ -1,0 +1,29 @@
+x-common-config:
+  &common-config
+  volumes:
+    - ./my-ebook:/app/my-ebook
+
+services:
+  book-builder-epub:
+    <<: *common-config
+    build:
+      context: .
+      dockerfile: DockerfileCombined
+      args:
+        - FORMAT=epub
+
+  book-builder-pdf:
+    <<: *common-config
+    build:
+      context: .
+      dockerfile: DockerfileCombined
+      args:
+        - FORMAT=pdf
+
+  book-builder-docx:
+    <<: *common-config
+    build:
+      context: .
+      dockerfile: DockerfileCombined
+      args:
+        - FORMAT=docx

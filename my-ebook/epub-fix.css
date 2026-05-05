@@ -1,0 +1,74 @@
+/* Remove underlines and strikethroughs from code spans */
+pre code span {
+  text-decoration: none !important;
+}
+
+/* Optional: prevent line-through on code elements */
+pre code span.strikethrough,
+pre code span.deleted {
+  text-decoration: none !important;
+}
+
+/* Optional: prevent underline on code elements */
+pre code span.underline,
+pre code span.modified {
+  text-decoration: none !important;
+}
+
+/* Size for code elements */
+code, pre {
+  font-size: 0.9em;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  border-bottom: 2px solid #333;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #000000;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  border-bottom: 1px solid #666;
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+  color: #333366;
+}
+
+h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  font-style: italic;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
+  color: #555555;
+}
+
+h4, h5, h6 {
+  font-size: 1em;
+  font-weight: normal;
+  font-style: italic;
+  margin-top: 0.8em;
+  margin-bottom: 0.2em;
+}
+
+table {
+  font-size: 0.85em;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+table th,
+table td {
+  border: 1px solid #333;
+  padding: 8px;
+}
+
+table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}

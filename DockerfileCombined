@@ -1,0 +1,64 @@
+# Use a base image with Ubuntu, as it's common and has good package support
+FROM ubuntu:24.04
+
+# Set build argument for format (default to epub)
+ARG FORMAT=epub
+ENV FORMAT=$FORMAT
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Validate format is valid
+# Add this validation step before the CMD instruction
+RUN if [ "$FORMAT" != "epub" ] && [ "$FORMAT" != "pdf" ] && [ "$FORMAT" != "docx" ]; then \
+    echo "ERROR: Invalid format specified. Allowed values are 'epub', 'pdf', or 'docx'." >&2; \
+    exit 1; \
+    fi
+
+# Install necessary packages: pandoc, python3, pip, nodejs, npm, clang-format, default-jdk
+RUN apt-get update && \
+    apt-get install -y \
+    clang-format \
+    default-jdk \
+    git \
+    libimage-exiftool-perl \
+    nodejs \
+    npm \
+    pandoc \
+    python3 \
+    python3-pip \
+    python3-pygments \
+    python3-docx \
+    uuid-runtime \
+    wget && \
+    if [ "$FORMAT" = "pdf" ]; then \
+        apt-get install -y \
+        texlive-fonts-recommended \
+        texlive-fonts-extra \
+        texlive-latex-extra \
+        texlive-xetex; \
+    fi && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install google-java-format
+ARG GJF_VERSION="1.33.0"
+ARG GJF_SHA256="697707af07c7753f29cba415c6a76b7882702ff464f807da98b28069b8751910"
+
+RUN wget https://github.com/google/google-java-format/releases/download/v$GJF_VERSION/google-java-format-$GJF_VERSION-all-deps.jar -O /usr/local/bin/google-java-format.jar && \
+    echo "$GJF_SHA256  /usr/local/bin/google-java-format.jar" | sha256sum -c - && \
+    printf '#!/bin/bash\njava -jar /usr/local/bin/google-java-format.jar "$@"\n' > /usr/local/bin/google-java-format && \
+    chmod +x /usr/local/bin/google-java-format
+
+# Install prettier globally
+# Install mermaid-cli for generating mermaid diagrams
+RUN npm install -g prettier@3.2.5 @mermaid-js/mermaid-cli@11.12.0 && npm cache clean --force
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the entire book_template directory into the container
+COPY . /app
+
+# Set the default command to build the book based on FORMAT
+CMD ["sh", "-c", "make -C my-ebook $FORMAT"]
