@@ -2,5 +2,5 @@
 
 - Constructor delegation
 - Initialization order guarantees
-- Rule of Zero / Rule of Five / Rule of Six
+- Rule of Zero / Rule of Three / Rule of Five / Rule of Six
 - Object construction with type lists
