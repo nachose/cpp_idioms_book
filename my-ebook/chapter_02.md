@@ -476,7 +476,7 @@ This is a nuanced topic where reasonable programmers differ. The modern consensu
 
 **Pitfall 1: The "most vexing parse" legacy**:
 ```cpp
-auto x = MyClass();  // Might declare a function if you're not careful!
+auto x = MyClass();  // Correctly initializes an object, avoiding the most vexing parse.
 ```
 In older C++, `MyClass()` could be parsed as a function declaration. In modern C++ with uniform initialization (`{}`), this is less common but still possible. Using `auto x = MyClass{};` or `auto x = MyClass(args...);` avoids this.
 
