@@ -937,7 +937,7 @@ The benefits of consistent const-correctness compound over time:
 
 **Enables `constexpr`**: As we'll see, const-correctness is a prerequisite for many `constexpr` constructs.
 
-A note on convention: the "const" should be on the right side of what it modifies (the "east const" style: `const Widget*` rather than `Widget const*`). This reads more naturally: "const pointer to Widget" versus "pointer to const Widget." Both are valid, but the former is more common in modern C++ codebases and reads left-to-right.
+A note on convention: some prefer placing "const" on the right side of the type it modifies (the "east const" style: `Widget const*` rather than `const Widget*`). Both mean "pointer to const Widget," but the latter is more common in many codebases.
 
 ### constexpr: Computing at Compile Time
 
