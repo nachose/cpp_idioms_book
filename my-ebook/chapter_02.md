@@ -496,7 +496,7 @@ These are generally what you want, but always verify with tooling if unsure.
 
 **Pitfall 4: Lifetime issues with `auto` and references**
 ```cpp
-auto& ref = getTemporary();  // Dangling reference! Temporary dies at end of statement
+const auto& ref = getTemporary();  // Lifetime extension keeps the temporary alive
 ```
 The compiler will not warn in all cases. Be careful binding `auto&` to temporary objects.
 
