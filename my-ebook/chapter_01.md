@@ -62,6 +62,9 @@ public:
     ~FileGuard() {
         if (handle_) fclose(handle_);
     }
+
+    FileGuard(const FileGuard&) = delete;
+    FileGuard& operator=(const FileGuard&) = delete;
     
     FILE* get() const { return handle_; }
     
