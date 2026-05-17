@@ -259,7 +259,7 @@ A particularly important idiom is passing by `const&` (const reference). This gi
 
 ```cpp
 // Best practice for read-only large parameter passing
-void printSummary(const LargeData& data) const {
+void printSummary(const LargeData& data) {
     // Can read data but not modify it
 }
 ```
