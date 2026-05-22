@@ -2,7 +2,7 @@
 
 Object creation and destruction form the foundation of any C++ program. How you create objects determines their lifetime, initialization guarantees, and ultimately the correctness and performance of your code. This chapter explores idioms that give you fine-grained control over object creation, enabling polymorphic cloning, enforcing initialization constraints, and providing flexible factory mechanisms that go beyond what the language provides by default.
 
-The idioms in this chapter address common challenges: creating objects when the concrete type isn't known at compile time, ensuring objects are constructed with meaningful names rather than ambiguous overloaded constructors, enabling polymorphic copying without sacrificing type safety, and creating new objects by copying existing prototypes. Each idiom solves a distinct problem andTogether, they form a toolkit for managing object lifecycle in ways that raw constructors alone cannot achieve.
+The idioms in this chapter address common challenges: creating objects when the concrete type isn't known at compile time, ensuring objects are constructed with meaningful names rather than ambiguous overloaded constructors, enabling polymorphic copying without sacrificing type safety, and creating new objects by copying existing prototypes. Each idiom solves a distinct problem and together, they form a toolkit for managing object lifecycle in ways that raw constructors alone cannot achieve.
 
 ## Factory Methods and Virtual Constructors
 
