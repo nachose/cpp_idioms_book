@@ -388,9 +388,11 @@ struct RefCountPolicy {
         ++(*refCount_);
     }
     RefCountPolicy& operator=(const RefCountPolicy& other) {
-        if (--(*refCount_) == 0) delete refCount_;
-        refCount_ = other.refCount_;
-        ++(*refCount_);
+        if (this != &other) {
+            if (--(*refCount_) == 0) delete refCount_;
+            refCount_ = other.refCount_;
+            ++(*refCount_);
+        }
         return *this;
     }
     ~RefCountPolicy() { if (--(*refCount_) == 0) delete refCount_; }
