@@ -129,10 +129,11 @@ private:
 };
 
 // Test: inject mock
-MockDatabaseConnection mock;
-UserRepository repo(std::make_unique<MockDatabaseConnection>());
+auto mock = std::make_unique<MockDatabaseConnection>();
+auto* mockPtr = mock.get();
+UserRepository repo(std::move(mock));
 repo.save(user);
-assert(mock.lastQuery() == "INSERT INTO users...");
+assert(mockPtr->lastQuery() == "INSERT INTO users...");
 ```
 
 Testing inheritance-based designs is far more complicated because you can't easily replace the parent class's behavior.
