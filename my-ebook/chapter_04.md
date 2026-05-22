@@ -210,6 +210,10 @@ std::string Widget::title() const {
 void Widget::render() {
     // Render implementation
 }
+
+Widget::~Widget() = default;
+Widget::Widget(Widget&&) noexcept = default;
+Widget& Widget::operator=(Widget&&) noexcept = default;
 ```
 
 The implementation is in the .cpp file, so users of the class only see the header with the public interface. Changing the implementation—including adding new members, changing types, or even swapping the entire implementation—doesn't require recompiling client code, only relinking.
