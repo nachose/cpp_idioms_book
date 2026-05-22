@@ -109,8 +109,8 @@ public:
     
 private:
     // Private constructor enforces use of named constructors
-    Point(double x, double y, CoordinateSystem)
-        : x_(x), y_(y), system_(Coordinate) {}
+    Point(double x, double y, CoordinateSystem system)
+        : x_(x), y_(y), system_(system) {}
     
     double x_, y_;
     CoordinateSystem system_;
