@@ -359,7 +359,7 @@ public:
     void registerType(const std::string& name) {
         static_assert(std::is_base_of_v<Base, Derived>);
         prototypes_[name] = []() -> std::unique_ptr<Base> {
-            return std::make_unique<Derived>();
+        creators_[name] = []() -> std::unique_ptr<Base> {
         };
     }
     
