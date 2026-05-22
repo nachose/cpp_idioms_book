@@ -187,7 +187,7 @@ public:
     }
     
     void draw(std::ostream& out) const override;
-    double area() const override { return M_PI * radius_ * radius_; }
+    double area() const override { return std::acos(-1.0) * radius_ * radius_; }
     
 private:
     double radius_;
