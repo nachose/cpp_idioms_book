@@ -211,7 +211,7 @@ private:
 
 Include guard format: `PROJECT_FILE_PATH_H`. Path-style guards (e.g., `MYLIB_FILE_SYSTEM_H`) make the guard self-documenting. `#pragma once` is widely supported and simpler, but the `#ifndef` form is maximally portable. Both are acceptable; the book uses `#ifndef` for maximum compatibility.
 
-Include ordering: standard library first, then third-party libraries, then project headers. This ordering catches missing includes — if a project header relies on a standard library include that it does not directly include, the compilation will fail when it is listed first, revealing the dependency.
+Include ordering: project-specific headers first, then third-party libraries, then standard library headers. This ordering ensures that project headers are self-contained — if a project header relies on a library include that it does not directly include, the compilation will fail when it is listed first, revealing the missing dependency.
 
 The Rule of Five is explicit even when defaulted or deleted, making the class's intent clear. `explicit` is used for single-argument constructors to prevent implicit conversions.
 
