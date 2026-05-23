@@ -395,7 +395,7 @@ public:
 
     Connection connect(Callback cb) {
         auto conn = Connection();
-        callbacks_.push_back({conn.alive, std::move(cb)});
+        callbacks_.push_back({std::weak_ptr<bool>(conn.alive), std::move(cb)});
         return conn;
     }
 
