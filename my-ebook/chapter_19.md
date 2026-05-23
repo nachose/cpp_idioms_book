@@ -44,7 +44,7 @@ For more complex preconditions, you might wrap the check in a utility:
 ```cpp
 template <typename T, typename... Args>
 constexpr void expect(bool condition, Args&&... msg) {
-    if constexpr (!std::is_constant_evaluated()) {
+    if !consteval {
         if (!condition) {
             std::cerr << "Precondition failed: ";
             ((std::cerr << std::forward<Args>(msg)), ...);
