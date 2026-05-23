@@ -245,7 +245,7 @@ There are three ways to fulfill a promise: with a value, with an exception, or b
 ```cpp
 promise.set_value(42);                              // normal completion
 promise.set_exception(std::make_exception_ptr(...)); // error completion
-promise.set_value(std::current_exception());          // re-throw caught exception
+promise.set_exception(std::current_exception());          // re-throw caught exception
 ```
 
 Setting a value on an already-fulfilled promise throws `std::future_error`. This is by design: a promise represents an exclusive contract, and fulfilling it twice would violate the expectations of the holder of the future.
