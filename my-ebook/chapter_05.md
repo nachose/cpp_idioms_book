@@ -45,8 +45,8 @@ public:
     Connection(const std::string& host, int port, bool secure)
         : Connection(host, port, 30, secure) {}
     
-    Connection(const std::string& host, int port, int timeout, bool secure)
-        : host_(host), port_(port), timeout_(timeout), 
+    Connection(std::string host, int port, int timeout, bool secure)
+        : host_(std::move(host)), port_(port), timeout_(timeout), 
           secure_(secure), connected_(false) {}
     
 private:
