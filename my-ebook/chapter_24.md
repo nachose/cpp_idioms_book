@@ -473,7 +473,7 @@ public:
         // Mark slot for removal (shown later)
     }
 
-    void emit(Args... args) {
+    void emit(const Args&... args) {
         for (auto& slot : slots_) {
             if (slot) slot(args...);
         }
