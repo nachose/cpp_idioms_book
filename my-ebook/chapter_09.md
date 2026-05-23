@@ -1382,7 +1382,42 @@ public:
     explicit WeakCountedPtr(T* p) : ptr_(p) {}
 
     bool expired() const {
-        return !ptr_ || ptr_->refCount() == 0;
+template<typename T>
+class WeakCountedPtr;
+
+struct ControlBlock {
+    std::atomic<int> strongCount{0};
+    std::atomic<int> weakCount{0};
+    T* ptr = nullptr;
+
+    void releaseStrong() {
+        if (strongCount.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+            delete ptr;
+            ptr = nullptr;
+            releaseWeak();
+        }
+    }
+
+    void releaseWeak() {
+        if (weakCount.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+            delete this;
+        }
+    }
+};
+
+template<typename T>
+class WeakCountedPtr {
+    ControlBlock* cb = nullptr;
+public:
+    WeakCountedPtr() = default;
+    // ... (copy/move constructors and assignment operators to manage cb->weakCount)
+
+    bool expired() const {
+        return !cb || cb->strongCount.load(std::memory_order_acquire) == 0;
+    }
+
+    // ... (lock() implementation using cb->strongCount.fetch_add)
+};
     }
 
     std::shared_ptr<T> lock() const {
