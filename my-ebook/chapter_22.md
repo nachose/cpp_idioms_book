@@ -852,9 +852,20 @@ public:
         slots_[capacity - 1].next_free = static_cast<size_t>(-1);  // End marker
 
         // Construct all objects in-place
-        for (size_t i = 0; i < capacity; ++i) {
-            new (&slots_[i].object) T(std::forward<Args>(args)...);
+    IntrusivePool(size_t capacity, Args&&... args) : slots_(capacity), head_(0) {
+        for (size_t i = 0; i < capacity - 1; ++i) {
+            slots_[i].next_free = i + 1;
         }
+        slots_[capacity - 1].next_free = static_cast<size_t>(-1);
+    }
+
+    T* acquire() {
+        if (head_ == static_cast<size_t>(-1)) return nullptr;
+        size_t index = head_;
+        head_ = slots_[index].next_free;
+        // Construct the object in-place only when acquired
+        return new (&slots_[index].object) T(std::forward<Args>(args)...);
+    }
     }
 
     T* acquire() {
