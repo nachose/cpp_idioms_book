@@ -229,7 +229,7 @@ if (auto sp = wp.lock()) {
 }
 
 // Get shared_ptr directly (throws if expired)
-auto sp = wp.lock();  // May throw std::bad_weak_ptr
+std::shared_ptr<T> sp(wp);  // Throws std::bad_weak_ptr
 // Or:
 auto sp2 = wp.shared_from_this();
 ```
