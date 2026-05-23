@@ -275,7 +275,7 @@ For compile-time fixed sizes, template parameters give the caller control:
 template <typename T, size_t InlineBytes = 64>
 class SmallBuffer {
     static constexpr size_t Capacity =
-        (InlineBytes - 2 * sizeof(T*)) / sizeof(T);
+        (InlineBytes - 3 * sizeof(T*)) / sizeof(T);
     // ...
 };
 ```
