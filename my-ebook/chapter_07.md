@@ -1174,15 +1174,17 @@ public:
     }
 
     void* allocate(size_t size, size_t alignment = alignof(std::max_align_t)) {
-        size = (size + alignment - 1) & ~(alignment - 1);
+        char* base = static_cast<char*>(pool_);
+        uintptr_t current = reinterpret_cast<uintptr_t>(base + used_);
+        uintptr_t aligned = (current + alignment - 1) & ~(alignment - 1);
+        size_t newUsed = (aligned - reinterpret_cast<uintptr_t>(base)) + size;
 
-        if (used_ + size > poolSize_) {
+        if (newUsed > poolSize_) {
             return nullptr;
         }
 
-        void* result = pool_ + used_;
-        used_ += size;
-        return result;
+        used_ = newUsed;
+        return reinterpret_cast<void*>(aligned);
     }
 
     void reset() {
