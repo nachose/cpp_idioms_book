@@ -176,7 +176,7 @@ static_assert(std::is_pointer_v<const char*>);
 static_assert(std::is_array_v<int[4]>);
 static_assert(std::is_class_v<std::string>);
 static_assert(std::is_enum_v<enum class Color { Red }>);
-static_assert(std::is_union_v<std::variant<int, double>>);
+static_assert(std::is_union_v<union MyUnion { int i; double d; }>);
 ```
 
 These traits map straight to the C++ type taxonomy. `is_arithmetic` is `is_integral || is_floating_point`, and `is_fundamental` adds `is_void` and `is_null_pointer`. The hierarchy matters because it enables generic code to branch on type category: for example, an algorithm might use `memcpy` for trivially copyable types but element-wise copy for class types.
