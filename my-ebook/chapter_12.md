@@ -304,8 +304,8 @@ public:
     }
 
     template<typename F>
-    IO<F> map(F&& f) const {
-        return IO<F>([this, &f]() { return f(this->run()); });
+    auto map(F&& f) const -> IO<decltype(f(std::declval<T>()))> {
+        return IO<decltype(f(std::declval<T>()))>([action = this->action, f = std::forward<F>(f)]() { return f(action()); });
     }
 };
 ```
