@@ -755,59 +755,21 @@ Each element is stored through a pointer to the `Concept` base class. The concre
 The `std::unique_ptr`-based approach allocates every element on the heap. For small types (integers, pointers, small structs), this adds significant overhead. The **small buffer optimization (SBO)** stores small objects in an inline buffer and falls back to heap allocation only for larger types:
 
 ```cpp
-class SmallAnyContainer {
-    static constexpr size_t BufferSize = 16;
-    static constexpr size_t Alignment = alignof(std::max_align_t);
+    SmallAnyContainer(const SmallAnyContainer&) = delete;
+    SmallAnyContainer& operator=(const SmallAnyContainer&) = delete;
 
-    struct Concept {
-        virtual ~Concept() = default;
-        virtual Concept* clone(void* buffer) const = 0;
-        virtual void destroy() = 0;
-    };
-
-    template <typename T>
-    struct Model : Concept {
-        static_assert(sizeof(T) <= BufferSize);
-        static_assert(alignof(T) <= Alignment);
-
-        alignas(Alignment) std::byte storage_[sizeof(T)];
-
-        template <typename... Args>
-        explicit Model(Args&&... args) {
-            ::new (&storage_) T(std::forward<Args>(args)...);
-        }
-
-        void destroy() override {
-            reinterpret_cast<T*>(&storage_)->~T();
-        }
-
-        Concept* clone(void* buffer) const override {
-            return ::new (buffer) Model<T>(*reinterpret_cast<const T*>(&storage_));
-        }
-
-        ~Model() override { destroy(); }
-    };
-
-    alignas(Alignment) std::byte buffer_[BufferSize];
-    Concept* active_ = nullptr;
-
-public:
-    template <typename T>
-    explicit SmallAnyContainer(T value) {
-        static_assert(sizeof(Model<T>) <= BufferSize);
-        active_ = ::new (buffer_) Model<T>(std::move(value));
+    SmallAnyContainer(SmallAnyContainer&& other) noexcept : active_(other.active_) {
+        other.active_ = nullptr;
     }
 
-    ~SmallAnyContainer() {
-        if (active_) active_->destroy();
+    SmallAnyContainer& operator=(SmallAnyContainer&& other) noexcept {
+        if (this != &other) {
+            if (active_) active_->destroy();
+            active_ = other.active_;
+            other.active_ = nullptr;
+        }
+        return *this;
     }
-
-    template <typename T>
-    T* get() {
-        auto* model = reinterpret_cast<Model<T>*>(active_);
-        return model ? reinterpret_cast<T*>(&model->storage_) : nullptr;
-    }
-};
 ```
 
 The buffer is large enough to hold both the vtable pointer and the value for typical small types (16–64 bytes is common). Types larger than the buffer fall back to heap allocation by storing a `unique_ptr<Concept>` in the buffer. The `std::any` implementation in libstdc++ and libc++ uses precisely this hybrid approach.
