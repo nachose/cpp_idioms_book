@@ -255,7 +255,11 @@ A lock-free algorithm guarantees that at least one thread can make progress even
 
 ```cpp
 template<typename T>
-class LockFreeStack {
+    ~LockFreeStack() {
+        while (pop().has_value()) {
+            // Nodes are deleted inside pop()
+        }
+    }
     struct Node {
         T data;
         Node* next;
