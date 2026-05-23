@@ -9,7 +9,7 @@ on:
   #     - main
 
 env:
-  BOOK_NAME: sf_history
+  BOOK_NAME: cpp_idioms
 
 concurrency:
   group: book-build

@@ -1,15 +1,15 @@
-title: "C++ for Low-Latency Systems"
-pagetitle: "C++ for Low-Latency Systems"
-author: "Jose Ignacio Seco Sanz"
+title: "C++ Idioms"
+pagetitle: "C++ Idioms"
+author: "Rainer Sanchez Navarro"
 language: "en"
 rights: |
-    Copyright © 2026 Jose Ignacio Seco Sanz.
+    Copyright © 2026 Rainer Sanchez Navarro.
     This work was generated with the assistance of AI tools. 
     Human editorial control was applied to ensure technical accuracy.
 ai-origin: "true"
 # Added through makefile
 # identifier: "urn:uuid:$(uuidgen)"
-publisher: "Jose Ignacio Seco Sanz"
+# publisher: "Jose Ignacio Seco Sanz"
 # cover-image: cover.png    # Optional: provide a 1600x2560 cover if you want
 
 # author: "Rainer Sanchez Navarro"
