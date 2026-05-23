@@ -429,21 +429,21 @@ public:
         return *this;
     }
 
-    SmallVector(SmallVector&& other) noexcept : size_(0), data_(inlineBuffer_) {
+    SmallVector(SmallVector&& other) noexcept : size_(other.size_), isLarge_(other.isLarge_) {
         if (other.isInline()) {
+            data_ = inlineBuffer_;
             for (size_t i = 0; i < other.size_; ++i) {
                 new (&data_[i]) T(std::move(other.data_[i]));
             }
-            size_ = other.size_;
         } else {
             heapBuffer_ = other.heapBuffer_;
             capacity_ = other.capacity_;
-            data_ = heapBuffer_;
-            size_ = other.size_;
+            data_ = reinterpret_cast<T*>(heapBuffer_);
             other.heapBuffer_ = nullptr;
-            other.size_ = 0;
-            other.data_ = other.inlineBuffer_;
         }
+        other.size_ = 0;
+        other.isLarge_ = 0;
+        other.data_ = other.inlineBuffer_;
     }
 
     SmallVector& operator=(SmallVector&& other) noexcept {
