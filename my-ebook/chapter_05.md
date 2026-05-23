@@ -482,36 +482,43 @@ template<typename... Types>
 struct TypeList {};
 
 // Type-at: get the Nth type from a type list
-template<typename List, size_t Index>
+template<typename... Types>
+struct TypeList {};
+
+// Helper to find type at index
+template<size_t Index, typename... Types>
 struct TypeAt;
 
-template<typename Head, typename Tail>
-struct TypeAt<TypeListNode<Head, Tail>, 0> {
+template<typename Head, typename... Tail>
+struct TypeAt<0, Head, Tail...> {
     using type = Head;
 };
 
-template<typename Head, typename Tail, size_t Index>
-struct TypeAt<TypeListNode<Head, Tail>, Index> {
-    using type = typename TypeAt<Tail, Index - 1>::type;
+template<size_t Index, typename Head, typename... Tail>
+struct TypeAt<Index, Head, Tail...> {
+    using type = typename TypeAt<Index - 1, Tail...>::type;
 };
+
+// Helper to check if type exists in list
+template<typename T, typename... Types>
+struct MatchesOneOf : std::disjunction<std::is_same<T, Types>...> {};
 
 // Factory that creates objects of types in the list
 template<typename TypeList>
 class ObjectFactory;
 
-// Specialization for non-empty list
-template<typename Head, typename... Tail>
-class ObjectFactory<TypeList<Head, Tail...>> {
+template<typename... Types>
+class ObjectFactory<TypeList<Types...>> {
 public:
     template<typename T>
     std::unique_ptr<T> create() {
-        static_assert(MatchesOneOf<T, Head, Tail...>::value);
+        static_assert(MatchesOneOf<T, Types...>::value, "Type not in list");
         return std::make_unique<T>();
     }
     
     template<size_t Index>
-    auto createAt() -> std::unique_ptr<typename TypeAt<TypeList, Index>::type> {
-        using Type = typename TypeAt<TypeList, Index>::type;
+    auto createAt() -> std::unique_ptr<typename TypeAt<Index, Types...>::type> {
+        using Type = typename TypeAt<Index, Types...>::type;
         return std::make_unique<Type>();
     }
 };
