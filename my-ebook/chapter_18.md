@@ -360,17 +360,16 @@ A powerful extension of the scope guard pattern is the transactional RAII wrappe
 ```cpp
 class Transaction {
 public:
-    Transaction(Database& db) : db_(db) {
+    Transaction(Database& db) 
+        : db_(db), initial_exceptions_(std::uncaught_exceptions()) {
         db_.begin_transaction();
     }
 
     ~Transaction() noexcept {
-        if (std::uncaught_exceptions() > 0) {
-            db_.rollback();      // Exception in flight: rollback
-        } else {
-            if (!committed_) {
-                db_.commit();    // Normal exit: commit
-            }
+        if (std::uncaught_exceptions() > initial_exceptions_) {
+            db_.rollback();      // Exception occurred during this scope: rollback
+        } else if (!committed_) {
+            db_.commit();        // Normal exit: commit
         }
     }
 
@@ -383,6 +382,7 @@ public:
 
 private:
     Database& db_;
+    int initial_exceptions_;
     bool committed_ = false;
 };
 
