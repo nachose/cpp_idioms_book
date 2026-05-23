@@ -1,6 +1,6 @@
 -include config.mk
 
-BOOK ?= java_dependency_injection
+BOOK ?= cpp_idioms
 BUILD_DIR := make_output
 AI_DISCLOSURE := AI-Generated Content: Drafted by LLM, Structured by Human.
 
