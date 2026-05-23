@@ -773,7 +773,35 @@ public:
     any(T value) {
         if (sizeof(T) <= kSmallBufferSize) {
             // Store inline using type-erased wrapper
-            holder_ = new SmallHolder<T>(std::move(value));
+class any {
+public:
+    static constexpr size_t kSmallBufferSize = 32;
+
+    any() : holder_(nullptr), isSmall_(false) {}
+
+    template<typename T>
+    any(T value) {
+        if (sizeof(T) <= kSmallBufferSize && alignof(T) <= alignof(std::max_align_t)) {
+            new (buffer_) SmallHolder<T>(std::move(value));
+            isSmall_ = true;
+        } else {
+            holder_ = new LargeHolder<T>(std::move(value));
+            isSmall_ = false;
+        }
+    }
+
+    ~any() {
+        if (isSmall_) {
+            reinterpret_cast<Holder*>(buffer_)->~Holder();
+        } else {
+            delete holder_;
+        }
+    }
+
+private:
+    alignas(std::max_align_t) char buffer_[kSmallBufferSize];
+    Holder* holder_;
+    bool isSmall_;
         } else {
             // Heap allocate
             holder_ = new LargeHolder<T>(std::move(value));
