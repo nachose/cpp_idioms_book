@@ -508,7 +508,10 @@ public:
         ptr_.store(new_value, std::memory_order_release);
         // Wait for all existing readers to complete
         // In practice, use synchronization primitives or platforms-specific APIs
-        synchronize();
+        // Wait for all existing readers to complete
+        // In practice, use platform-specific synchronization primitives (e.g., synchronize_rcu() on Linux)
+        /* platform_specific_synchronize(); */
+        delete old;
         delete old;
     }
 };
