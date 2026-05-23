@@ -168,8 +168,6 @@ The fix is to ensure that variables modified by different threads reside on diff
 ```cpp
 struct alignas(64) PaddedCounter {
     int value = 0;
-    // Padding to 64 bytes ensures no other counter shares this cache line
-    char padding[64 - sizeof(int)];
 };
 
 static_assert(sizeof(PaddedCounter) == 64);
