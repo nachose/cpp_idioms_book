@@ -1514,7 +1514,10 @@ struct LargestType<NullType> {
 };
 
 template<typename Head, typename... Tail>
-struct LargestType<TypeList<Head, Tail...>> {
+template<>
+struct LargestType<TypeList<>> {
+    using type = void;
+};
 private:
     using LargestTail = typename LargestType<TypeList<Tail...>>::type;
 public:
