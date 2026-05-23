@@ -395,7 +395,13 @@ public:
 
     static void flush() {
         // Each thread has its own buffer
+    static void flush() {
+        // Each thread has its own buffer
+        static std::mutex cout_mutex;
+        std::lock_guard<std::mutex> lock(cout_mutex);
         std::cout << buffer_.str();
+        buffer_.str("");
+    }
         buffer_.str("");
     }
 };
