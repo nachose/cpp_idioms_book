@@ -399,7 +399,7 @@ public:
         if (std::holds_alternative<T>(value)) {
             return f(std::get<T>(value));
         }
-        return Resultfailure(std::get<E>(value));
+        return Result::failure(std::get<E>(value));
     }
 
     // Lift
