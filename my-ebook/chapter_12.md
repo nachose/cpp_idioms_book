@@ -169,11 +169,12 @@ public:
     }
 
     template<typename F>
-    auto and_then(F&& f) -> Result<decltype(f(std::declval<T>()).value()), E> {
+    template<typename F>
+    auto and_then(F&& f) -> decltype(f(std::declval<T>())) {
         if (is_ok()) {
             return f(value());
         }
-        return err(error());
+        return decltype(f(std::declval<T>()))::err(error());
     }
 
     template<typename F>
