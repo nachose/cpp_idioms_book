@@ -448,7 +448,13 @@ namespace detail {
     struct take_while_adaptor {
         template <std::predicate Pred>
         constexpr auto operator()(Pred pred) const {
-            return std::bind_back(take_while_adaptor{}, std::move(pred));
+        template <std::predicate Pred>
+        constexpr auto operator()(Pred pred) const {
+            return [pred = std::move(pred)](auto&& range) {
+                return take_while_view<std::views::all_t<decltype(range)>, Pred>(
+                    std::views::all(std::forward<decltype(range)>(range)), pred);
+            };
+        }
         }
 
         template <std::ranges::viewable_range R, std::predicate Pred>
