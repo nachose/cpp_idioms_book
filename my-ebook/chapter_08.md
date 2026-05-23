@@ -93,7 +93,7 @@ public:
     FunctionWrapper() = default;
 
     template<typename F>
-    FunctionWrapper(F&& f) : wrapper_(std::make_unique<Model<F>>(std::move(f))) {}
+    FunctionWrapper(F&& f) : wrapper_(std::make_unique<Model<std::decay_t<F>>>(std::forward<F>(f))) {}
 
     R operator()(Args... args) const {
         return wrapper_->invoke(std::forward<Args>(args)...);
