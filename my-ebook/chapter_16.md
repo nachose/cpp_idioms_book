@@ -613,7 +613,7 @@ Fold expressions are unambiguously superior in every dimension and should be the
 
 - **Operator restriction**: Only the listed operators are valid. You cannot use custom functions or arbitrary callables directly in a fold. For complex per-element operations, fall back to comma folds (which can call any function as a side effect).
 
-- **Evaluation order**: In a left fold `(... op args)`, elements are evaluated left-to-right. In a right fold `(args op ...)`, the evaluation order is parenthesized right-to-left, but the compiler may still evaluate the arguments in any order before applying the operator. For most operators this does not matter, but for the comma operator in a right fold, the evaluation order of the function calls is unspecified.
+- **Evaluation order**: In a left fold, elements are evaluated left-to-right. In a right fold, the evaluation order is parenthesized right-to-left. For most operators, the operands can be evaluated in any order before the operator is applied. However, for the comma operator, &&, and ||, the sequencing rules of the operators themselves guarantee left-to-right evaluation in both left and right folds.
 
 - **No break or early exit**: Unlike a loop, a fold expression cannot skip elements or exit early. Although `&&` and `||` short-circuit at the operator level, the compiler still generates the full expression tree. The elements that are not evaluated due to short-circuiting are determined at runtime based on prior results, not by compile-time selection.
 
