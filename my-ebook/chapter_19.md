@@ -23,6 +23,7 @@ A precondition is a condition that must hold before a function begins execution.
 The simplest way to express a precondition in C++ is `assert`:
 
 ```cpp
+#include <algorithm>
 #include <cassert>
 #include <vector>
 
