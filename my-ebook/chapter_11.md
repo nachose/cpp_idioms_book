@@ -776,7 +776,7 @@ public:
             return f(get());
         }
         return f(E{});  // Propagate error type
-    }
+        return std::invoke_result_t<Func, T>::failure(error());
 };
 
 // Using Result for error handling
