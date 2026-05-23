@@ -147,7 +147,15 @@ This fixed order prevents confusion but can lead to subtle bugs when constructor
 class Widget {
 public:
     Widget(int size) : buffer_(size), data_(buffer_.data()) {}
-    // WRONG: buffer_ initializes first, then data_ is set to buffer_.data()
+class Widget {
+public:
+    Widget(int size) : buffer_(size), data_(buffer_.data()) {}
+    // BUG: data_ is initialized before buffer_ because of declaration order
+    
+private:
+    char* data_;  // Points into buffer_
+    std::vector<char> buffer_;
+};
     // This seems fine but the order is guaranteed regardless of initializer list
     
 private:
