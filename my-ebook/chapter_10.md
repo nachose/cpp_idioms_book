@@ -85,7 +85,8 @@ class Derived : Base {};
 int main() {
     process(42);           // MonomorphicTag - int is not polymorphic
     process(Base{});       // MonomorphicTag - not polymorphic
-    process(Derived{});     // PolymorphicTag - has virtual functions (implicitly)
+class Base { public: virtual ~Base() = default; };
+class Derived : public Base {};
 }
 ```
 
