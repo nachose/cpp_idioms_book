@@ -1235,7 +1235,7 @@ struct IndexOf<TypeList<Types...>, T> {
 private:
     template<size_t... Is>
     static constexpr size_t helper(std::index_sequence<Is...>) {
-        return ((std::is_same_v<std::tuple_element_t<Is, std::tuple<Types...>, T> ? Is : 0) + ...);
+        return ((std::is_same_v<std::tuple_element_t<Is, std::tuple<Types...>>, T> ? Is : 0) + ...);
     }
 public:
     static constexpr size_t value = helper(std::index_sequence_for<Types...>{});
