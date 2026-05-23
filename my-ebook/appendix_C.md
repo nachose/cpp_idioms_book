@@ -116,7 +116,7 @@ Why PascalCase for enumerators? It is the standard library convention (`std::err
 ### Template parameters
 
 - **Type template parameters**: single uppercase letter for generic code (`T`, `U`, `V`); descriptive PascalCase for constrained concepts (`Container`, `Predicate`).
-- **Non-type template parameters**: `snake_case` with leading underscore for unnamed parameters (`_N`, `_Fn`), but simpler is better: `std::size_t N` for trivial cases.
+- **Non-type template parameters**: snake_case (e.g., n, size) or PascalCase (e.g., N, Size), but simpler is better: std::size_t N for trivial cases.
 - **Template template parameters**: PascalCase.
 
 ```
