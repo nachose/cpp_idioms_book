@@ -388,7 +388,30 @@ class ScalarExpr : public VecExpr<ScalarExpr> {
 public:
     explicit ScalarExpr(double v) : value_(v) {}
     double operator[](std::size_t) const { return value_; }
-    std::size_t size() const { return 0; }  // size is determined by other operand
+class ScalarExpr : public VecExpr<ScalarExpr> {
+    double value_;
+public:
+    explicit ScalarExpr(double v) : value_(v) {}
+    double operator[](std::size_t) const { return value_; }
+    std::size_t size() const { return 0; } 
+};
+
+// Update operator+ to handle ScalarExpr size
+template<typename L, typename R>
+class VecAdd : public VecExpr<VecAdd<LHS, RHS>> {
+    const LHS& lhs_;
+    const RHS& rhs_;
+public:
+    VecAdd(const LHS& lhs, const RHS& rhs) : lhs_(lhs), rhs_(rhs) {}
+
+    double operator[](std::size_t i) const {
+        return lhs_[i] + rhs_[i];
+    }
+    std::size_t size() const {
+        // Use the non-zero size if one operand is a scalar
+        return lhs_.size() != 0 ? lhs_.size() : rhs_.size();
+    }
+};
 };
 ```
 
