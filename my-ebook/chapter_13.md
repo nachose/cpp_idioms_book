@@ -232,10 +232,8 @@ class MultiLockExample {
 public:
     // Always acquire a before b
     void update_both(int a, int b) {
-        // Use std::lock to acquire both without deadlock
-        std::lock(mutex_a_, mutex_b_);
-        std::lock_guard<std::mutex> lock_a(mutex_a_, std::adopt_lock);
-        std::lock_guard<std::mutex> lock_b(mutex_b_, std::adopt_lock);
+        // Use std::scoped_lock to acquire both without deadlock
+        std::scoped_lock lock(mutex_a_, mutex_b_);
         data_a_ = a;
         data_b_ = b;
     }
