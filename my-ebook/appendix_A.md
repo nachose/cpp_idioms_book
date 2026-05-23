@@ -16,7 +16,7 @@ The first international standard codified the language. Templates, exceptions, R
 
 - **RAII**: already in use since C with Classes, now formalized with deterministic destructors. The "resource acquisition is initialization" pattern was C++'s answer to `finally` blocks and garbage collection, and it remains the language's most important idiom.
 - **Pimpl (Handle/Body)**: using a pointer to an incomplete type to hide implementation details. Before C++11, this required a raw pointer and manual copy operations (or disabling them).
-- **CRTP (Curiously Recurring Template Pattern)**: discovered during STL work. `enable_shared_from_this` and `std::iterator` used it. The pattern provided static polymorphism decades before concepts.
+- **CRTP (Curiously Recurring Template Pattern)**: discovered during early template experimentation. `std::iterator` (now deprecated) used it to provide common typedefs. The pattern provided static polymorphism decades before concepts.
 - **SFINAE (Substitution Failure Is Not An Error)**: a principle of template instantiation that became a deliberate idiom for compile-time introspection. Before `void_t` and concepts, SFINAE was the only way to query type capabilities.
 - **Tag dispatch**: `std::advance` used iterator category tags to select the optimal algorithm at compile time.
 
