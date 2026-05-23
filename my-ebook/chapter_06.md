@@ -231,7 +231,7 @@ if (auto sp = wp.lock()) {
 // Get shared_ptr directly (throws if expired)
 std::shared_ptr<T> sp(wp);  // Throws std::bad_weak_ptr
 // Or:
-auto sp2 = wp.shared_from_this();
+auto sp2 = wp.lock();
 ```
 
 The `lock()` method is the most common pattern—it returns an empty `shared_ptr` if the object has been destroyed, otherwise returns a valid `shared_ptr`.
