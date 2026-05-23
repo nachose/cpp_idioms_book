@@ -376,7 +376,7 @@ struct tuple_element_holder {
     T value;
 };
 
-template <typename... Ts>
+template <typename... Ts, std::size_t... Is>
 struct flat_tuple : tuple_element_holder<Is, Ts>... {
     // inherits from each holder using its unique index
 };
