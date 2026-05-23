@@ -112,6 +112,16 @@ public:
     // Not copyable — each arena is unique.
     Arena(const Arena&) = delete;
     Arena& operator=(const Arena&) = delete;
+
+    void* alloc(size_t size, size_t alignment) {
+        size_t space = size_ - offset_;
+        void* ptr = buffer_ + offset_;
+        if (std::align(alignment, size, ptr, space)) {
+            offset_ = (static_cast<char*>(ptr) + size) - buffer_;
+            return ptr;
+        }
+        return nullptr;
+    }
 };
 
 template <typename T>
