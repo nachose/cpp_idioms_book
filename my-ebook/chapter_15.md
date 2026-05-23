@@ -114,7 +114,7 @@ template <typename T>
 struct has_foo<T, void_t<decltype(std::declval<T>().foo())>> : std::true_type {};
 ```
 
-The second partial specialization is only viable when the expression `T().foo()` is well-formed. `void_t` transforms the (potentially complex) decltype into `void`, matching the default template parameter. This two-step pattern—primary template with `void` default, partial specialization with `void_t<...>`—is the backbone of custom type detection in modern C++.
+The second partial specialization is only viable when the expression `std::declval<T>().foo()` is well-formed. `void_t` transforms the (potentially complex) decltype into `void`, matching the default template parameter. This two-step pattern—primary template with `void` default, partial specialization with `void_t<...>`—is the backbone of custom type detection in modern C++.
 
 ### Type list utilities
 
