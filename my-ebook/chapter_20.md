@@ -546,7 +546,7 @@ For a `std::vector<int>` with contiguous iterators, the compiler, guided by the 
 // Optimized path enabled by contiguous_iterator_tag + is_trivially_copyable_v
 template <typename T>
 T* copy(T* first, T* last, T* result) {
-    static_assert(is_trivially_copyable_v<T>);
+    static_assert(std::is_trivially_copyable_v<T>);
     memmove(result, first, (last - first) * sizeof(T));
     return result + (last - first);
 }
