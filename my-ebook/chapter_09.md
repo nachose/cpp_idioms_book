@@ -379,7 +379,7 @@ public:
 
 class Square {
 public:
-    void draw() const { /* ... */ */
+    void draw() const { /* ... */ }
 };
 ```
 
