@@ -83,7 +83,17 @@ struct Wrapper {
 
 // With EBO: sizeof(WrapperEBO) == sizeof(T)
 template <typename T, typename Cmp = Less>
-struct WrapperEBO : private Less {
+```cpp
+// With C++20 [[no_unique_address]]: sizeof(Wrapper) == sizeof(T)
+template <typename T, typename Cmp = Less>
+struct Wrapper {
+    T value;
+    [[no_unique_address]] Cmp cmp;
+
+    bool compare(const T& other) const {
+        return cmp(value, other);
+    }
+};
     T value;
     bool compare(const T& other) const {
         return this->operator()(value, other);
