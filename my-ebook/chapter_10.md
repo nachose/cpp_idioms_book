@@ -226,7 +226,7 @@ class IntegralWrapper {
 
 // Additional parameter position (often used with default arguments)
 template<typename T,
-         typename std::enable_if_t<std::is_integral_v<T, int> = 0>>
+         std::enable_if_t<std::is_integral_v<T>, int> = 0>>
 void process(T value) {}
 
 // In function body (less common, uses static_assert or if constexpr)
