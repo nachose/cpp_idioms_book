@@ -335,7 +335,16 @@ Internally, `shared_future` reference-counts the shared state. The state is dest
 
 ### Future continuations (C++20 and beyond)
 
-C++20 introduced `std::experimental::future` with `.then()` continuations, and C++23 formalized sender/receiver (P2300) as a generalization of futures. The continuation pattern avoids blocking by chaining work:
+### Future continuations (C++20 and beyond)
+
+While C++20 did not standardize `.then()` continuations, the C++23 standard introduces the Sender/Receiver model (P2300) as a powerful, unified framework for asynchronous composition. This model generalizes the concept of futures by decoupling the creation of work (senders) from its execution (receivers).
+
+```cpp
+// Conceptual example of the Sender/Receiver model (P2300)
+auto sender = async_operation() | then([](auto val) {
+    return process(val);
+});
+std::this_thread::sync_wait(std::move(sender));
 
 ```cpp
 future.then([](auto f) {
