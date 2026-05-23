@@ -140,7 +140,7 @@ struct VoidPromise {
     std::suspend_never initial_suspend() { return {}; }
 
     // Called when the coroutine reaches its final suspension point.
-    std::suspend_never final_suspend() noexcept { return {}; }
+    std::suspend_always final_suspend() noexcept { return {}; }
 
     // Called when co_return is encountered (without a value).
     void return_void() {}
