@@ -870,8 +870,7 @@ public:
         Slot* slot = reinterpret_cast<Slot*>(obj);
         size_t index = slot - slots_.data();
         slot->object.~T();                             // Destroy
-        new (&slot->object) T();                       // Re-construct (or reset)
-        slot->next_free = head_;
+        slot->next_free = head_; // Set next free (overwrites object memory)
         head_ = index;
     }
 };
