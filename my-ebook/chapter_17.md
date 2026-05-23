@@ -1786,15 +1786,20 @@ struct MulOp {
 };
 
 // ---- Operator overloads (expression builders) ----
+template <typename T> struct is_vector : std::false_type {};
+template <typename T, typename A> struct is_vector<Vector<T, A>> : std::true_type {};
+template <typename T> inline constexpr bool is_vector_v = is_vector<T>::value;
+
+// ---- Operator overloads (expression builders) ----
 template<typename LHS, typename RHS>
 auto operator+(const Expr<LHS>& lhs, const Expr<RHS>& rhs) {
     // Select storage: use ValStorage for expressions (already lightweight),
     // RefStorage for concrete vectors
     using StorageL = std::conditional_t<
-        std::is_base_of_v<Expr<LHS>, LHS> && !std::is_same_v<Vector<double>, LHS>,
+        std::is_base_of_v<Expr<LHS>, LHS> && !is_vector_v<LHS>,
         ValStorage, RefStorage>;
     using StorageR = std::conditional_t<
-        std::is_base_of_v<Expr<RHS>, RHS> && !std::is_same_v<Vector<double>, RHS>,
+        std::is_base_of_v<Expr<RHS>, RHS> && !is_vector_v<RHS>,
         ValStorage, RefStorage>;
 
     return BinExpr<AddOp, LHS, RHS, StorageL, StorageR>(
