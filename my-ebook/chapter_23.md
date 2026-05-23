@@ -406,7 +406,7 @@ public:
     }
 
 private:
-    std::map<std::tuple<std::string, int, char32_t>, Glyph> glyphs_;
+    std::map<std::tuple<std::string, int, char32_t>, Glyph, std::less<>> glyphs_;
 };
 ```
 
