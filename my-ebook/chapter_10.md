@@ -922,7 +922,18 @@ template<typename Head, typename... Tail>
 struct IndexOf<TypeList<Head, Tail...>, T>
     : std::conditional_t<std::is_same_v<Head, T>,
                          std::integral_constant<std::size_t, 0>,
-                         std::integral_constant<std::size_t, IndexOf<TypeList<Tail...>, T>::value + 1>> {};
+template<typename List, typename T>
+struct IndexOf;
+
+template<typename T>
+struct IndexOf<TypeList<>, T> : std::integral_constant<std::size_t, static_cast<std::size_t>(-1)> {};
+
+template<typename Head, typename... Tail, typename T>
+struct IndexOf<TypeList<Head, Tail...>, T> {
+    static constexpr std::size_t value = std::is_same_v<Head, T> ? 0 : 
+        (IndexOf<TypeList<Tail...>, T>::value == static_cast<std::size_t>(-1) ? 
+         static_cast<std::size_t>(-1) : 1 + IndexOf<TypeList<Tail...>, T>::value);
+};
 
 // Usage
 using MyList = TypeList<int, double, char, std::string>;
