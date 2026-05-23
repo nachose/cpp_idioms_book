@@ -68,7 +68,7 @@ While `and_then` handles chaining optional-to-optional operations, `map` (or `tr
 std::optional<User> user = find_user(db, 123);
 
 // Transform the user name to uppercase
-std::optional<std::string> upper_name = user.map([](const User& u) {
+std::optional<std::string> upper_name = user.transform([](const User& u) {
     std::string result = u.name;
     std::transform(result.begin(), result.end(), result.begin(), ::toupper);
     return result;
