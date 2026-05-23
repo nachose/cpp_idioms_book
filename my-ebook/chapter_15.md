@@ -190,7 +190,7 @@ Beyond category, introspection traits query specific properties of a type:
 ```cpp
 static_assert(std::is_const_v<const int>);
 static_assert(std::is_trivially_copyable_v<int>);
-static_assert(std::is_trivially_destructible_v<std::string>);
+static_assert(std::is_trivially_destructible_v<std::string_view>);
 static_assert(std::is_polymorphic_v<Base>);
 static_assert(std::is_abstract_v<AbstractBase>);
 static_assert(std::is_final_v<FinalClass>);
