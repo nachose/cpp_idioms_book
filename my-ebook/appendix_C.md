@@ -413,7 +413,7 @@ Free functions at namespace scope follow the same pattern as member functions. G
 
 ```cpp
 /// Maximum number of concurrent connections.
-constexpr int kMaxConnections = 256;
+constexpr int max_connections = 256;
 ```
 
 ### What not to document
