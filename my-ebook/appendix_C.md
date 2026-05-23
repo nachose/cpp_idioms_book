@@ -179,8 +179,9 @@ Every header follows a consistent structure:
 #ifndef MYLIB_FILE_SYSTEM_H
 #define MYLIB_FILE_SYSTEM_H
 
-#include <vector>        // standard library headers first
+#include <memory>        // standard library headers first
 #include <string>
+#include <vector>
 
 #include "error.h"       // project headers second
 
