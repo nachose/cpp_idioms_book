@@ -274,7 +274,16 @@ struct ExampleFrame : Task::promise_type {
     void resume() {
         switch (resume_point) {
         case 0: {
-            auto&& awaitable = read_int();
+struct ExampleFrame : Task::promise_type {
+    int resume_point = 0;
+    int x, y;
+    // Store awaitable in the frame to persist across suspension
+    std::remove_reference_t<decltype(read_int())> awaitable;
+
+    void resume() {
+        switch (resume_point) {
+        case 0: {
+            awaitable = read_int();
             if (!awaitable.await_ready()) {
                 resume_point = 1;
                 awaitable.await_suspend(handle);
