@@ -1306,13 +1306,13 @@ public:
     explicit Sorter(Algorithm algo) {
         switch (algo) {
         case Algorithm::Quick:
-            impl_ = []<typename T>(T& c) { SorterImpl<QuickSort>().sort(c); };
+            impl_ = []<typename T>(T& c) { SorterImpl<QuickSortPolicy>().sort(c); };
             break;
         case Algorithm::Heap:
-            impl_ = []<typename T>(T& c) { SorterImpl<HeapSort>().sort(c); };
+            impl_ = []<typename T>(T& c) { SorterImpl<HeapSortPolicy>().sort(c); };
             break;
         case Algorithm::Merge:
-            impl_ = []<typename T>(T& c) { SorterImpl<MergeSort>().sort(c); };
+            impl_ = []<typename T>(T& c) { SorterImpl<MergeSortPolicy>().sort(c); };
             break;
         }
     }
