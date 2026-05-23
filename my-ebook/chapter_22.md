@@ -1009,7 +1009,49 @@ public:
 };
 ```
 
-The lock-free pool uses a compare-and-swap (CAS) loop on the head pointer. Each acquire attempts to swing the head to the next free slot; if another thread concurrently acquires, the CAS fails and the loop retries. The ABA problem is avoided here because the head pointer changes address on every pop (or a tagged pointer is used for safety in high-contention environments).
+template <typename T>
+class LockFreePool {
+    struct Slot {
+        T object;
+        std::atomic<Slot*> next_free;
+    };
+
+    struct TaggedPointer {
+        Slot* ptr;
+        uintptr_t tag;
+    };
+
+    std::vector<Slot> slots_;
+    std::atomic<TaggedPointer> head_;
+
+public:
+    T* acquire() {
+        TaggedPointer old_head = head_.load(std::memory_order_acquire);
+        TaggedPointer new_head;
+        do {
+            if (!old_head.ptr) return nullptr;
+            new_head.ptr = old_head.ptr->next_free.load(std::memory_order_relaxed);
+            new_head.tag = old_head.tag + 1;
+        } while (!head_.compare_exchange_weak(old_head, new_head,
+                 std::memory_order_acq_rel, std::memory_order_acquire));
+        return &old_head.ptr->object;
+    }
+
+    void release(T* obj) {
+        Slot* slot = reinterpret_cast<Slot*>(obj);
+        slot->object.~T();
+        new (&slot->object) T();
+
+        TaggedPointer old_head = head_.load(std::memory_order_acquire);
+        TaggedPointer new_head;
+        do {
+            slot->next_free.store(old_head.ptr, std::memory_order_relaxed);
+            new_head.ptr = slot;
+            new_head.tag = old_head.tag + 1;
+        } while (!head_.compare_exchange_weak(old_head, new_head,
+                 std::memory_order_acq_rel, std::memory_order_acquire));
+    }
+};
 
 Lock-free pools can outperform mutex-based pools under high contention, but they require careful memory ordering and thorough testing on the target architecture. For most applications, the mutex-based pool — or a per-thread pool (see below) — is the safer choice.
 
