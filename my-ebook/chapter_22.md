@@ -389,7 +389,7 @@ The cost is that every access involves atomic reference count operations on the 
 
 ```cpp
 void process() {
-    auto& log = *Logger::instance();  // atomic refcount increment+decrement once
+    auto log = Logger::instance();  // Hold the shared_ptr to prevent destruction
     log.log("Processing...");
     log.log("Done.");
 }
