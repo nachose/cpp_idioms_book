@@ -154,7 +154,7 @@ public:
     template<typename F>
     InlineFunction(F&& f) {
         static_assert(sizeof(F) <= MaxSize, "Type too large for inline storage");
-        static_assert(alignof(F) <= MaxSize, "Type alignment too large");
+        static_assert(alignof(F) <= alignof(Concept), "Type alignment too large");
         new (storage_.data()) Model<F>(std::forward<F>(f));
         hasValue_ = true;
     }
