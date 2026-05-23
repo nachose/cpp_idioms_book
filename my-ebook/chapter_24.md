@@ -414,7 +414,7 @@ public:
     }
 
 private:
-    std::vector<std::pair<std::shared_ptr<bool>, Callback>> callbacks_;
+    std::vector<std::pair<std::weak_ptr<bool>, Callback>> callbacks_;
 };
 ```
 
