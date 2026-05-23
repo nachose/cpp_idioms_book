@@ -1006,8 +1006,8 @@ class Command {
 public:
     // Type-erased constructor: accepts any callable.
     template <typename F>
-        requires (!std::same_as<std::decay_t<F>, Command>)
-    Command(F&& f)
+        requires (!std::same_as<std::decay_t<F>, Command>) &&
+                 requires(std::decay_t<F> f) { f.execute(); f.undo(); }
         : self_(std::make_shared<Model<std::decay_t<F>>>(std::forward<F>(f))) {}
 
     void execute() { self_->execute(); }
