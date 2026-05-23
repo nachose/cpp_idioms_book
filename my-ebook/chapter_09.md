@@ -1309,7 +1309,7 @@ class CowPtr {
 public:
     explicit CowPtr(T* p = nullptr) {
         if (p) {
-            counted_ = new Counted<T>(p);
+            counted_ = std::make_shared<Counted>(p);
         }
     }
 
