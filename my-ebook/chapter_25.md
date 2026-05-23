@@ -1104,7 +1104,7 @@ This is the lambda equivalent of `std::partial_sum`, but it stores the accumulat
 A more sophisticated accumulator might track multiple statistics:
 
 ```cpp
-auto stats = [count = 0, sum = 0.0, min = double_MAX, max = double_MIN](double value) mutable {
+auto stats = [count = 0, sum = 0.0, min = std::numeric_limits<double>::max(), max = std::numeric_limits<double>::lowest()](double value) mutable {
     ++count;
     sum += value;
     if (value < min) min = value;
