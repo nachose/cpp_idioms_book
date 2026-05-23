@@ -400,9 +400,11 @@ public:
     }
 
     void notify(const Event& event) {
-        for (auto& [alive, cb] : callbacks_) {
-            if (alive && *alive && cb) {
-                cb(event);
+        for (auto& [weak_alive, cb] : callbacks_) {
+            if (auto alive = weak_alive.lock()) {
+                if (*alive && cb) {
+                    cb(event);
+                }
             }
         }
         // Optional: garbage-collect disconnected entries.
