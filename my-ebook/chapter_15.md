@@ -959,7 +959,7 @@ const int cx = 42;
 process(cx);     // Error: ambiguous call
 ```
 
-Overload (1) is preferred for all non-const and const lvalues and for all rvalues because it is more specialized. Overload (2) is only selected when (1) is not viable. This is why constrained templates or SFINAE are needed to restrict forwarding references to specific use cases.
+Overload (1) is preferred for non-const lvalues and for all rvalues. For const lvalues, the call is ambiguous. This is why constrained templates or SFINAE are needed to restrict forwarding references to specific use cases.
 
 ### Summary
 
