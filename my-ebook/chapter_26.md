@@ -147,7 +147,7 @@ public:
         using difference_type = std::ptrdiff_t;
         using value_type = int;
 
-        Iterator(std::istream* s, int v) : stream_(s), value_(v) {}
+        Iterator(std::istream* s) : stream_(s) { advance(); }
         Iterator& operator++() { advance(); return *this; }
         int operator*() const { return value_; }
         bool operator!=(std::default_sentinel_t) const {
