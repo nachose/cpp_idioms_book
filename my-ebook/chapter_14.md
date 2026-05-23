@@ -149,17 +149,17 @@ protected:
     
 private:
     void processMessages() {
-        while (running_) {
+        while (true) {
             std::unique_ptr<Message> msg;
             {
                 std::unique_lock<std::mutex> lock(queue_mutex_);
                 condition_.wait(lock, [this] { return !message_queue_.empty() || !running_; });
+                if (message_queue_.empty() && !running_) break;
                 if (!message_queue_.empty()) {
                     msg = std::move(message_queue_.front());
                     message_queue_.pop();
                 }
             }
-            
             if (msg) {
                 onReceive(std::move(msg));
             }
