@@ -79,7 +79,7 @@ A major revision that reshaped everyday C++:
 - **Structured bindings**: `auto [a, b, c] = tuple_returning_function()`. Decomposed tuples, pairs, and arrays. Required the tuple-like protocol.
 - **`if constexpr`**: compile-time conditional branching in templates. Replaced many SFINAE patterns. Made recursive template functions trivial.
 - **Fold expressions**: `(args + ...)` expanded parameter packs directly. Eliminated recursion for most pack operations.
-- **`std::optional`**, **`std::variant`**, **`std::any`**: vocabulary types for "maybe a value," "one of several types," and "any type." Each with monadic interfaces for chaining.
+- **`std::optional`**, **`std::variant`**, **`std::any`**: vocabulary types for "maybe a value," "one of several types," and "any type."
 - **`std::string_view`**: non-owning string reference. Eliminated temporary string copies in function parameters.
 - **Parallel algorithms** (C++17 execution policies): `std::sort(std::execution::par, ...)`. Algorithm-level parallelism without threading.
 - **`std::filesystem`**: portable path and directory operations. Replaced platform-specific code.
