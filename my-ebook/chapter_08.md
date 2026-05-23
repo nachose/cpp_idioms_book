@@ -206,7 +206,7 @@ public:
     template<typename F>
     SimpleCallable(F f) : func_([](void* self) {
         auto* self2 = static_cast<Model<F>*>(self);
-        self2->value()();
+        self2->value_();
     }), data_(new Model<F>(std::move(f))) {}
 
     void operator()() const {
