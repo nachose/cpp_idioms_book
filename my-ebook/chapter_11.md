@@ -166,7 +166,7 @@ Lambdas can capture local variables, enabling higher-order functions that create
 // Factory creating stateful functions
 auto makeCounter() {
     int count = 0;
-    return [&count]() mutable { return ++count; };
+    return [count = 0]() mutable { return ++count; };
 }
 
 // Function creating a memorizing function
