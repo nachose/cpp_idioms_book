@@ -143,12 +143,29 @@ class AutoConnect {
     Connection conn_;
     bool connected_ = false;
 public:
+    AutoConnect() = default;
+    ~AutoConnect() {
+        if (connected_) { conn_.disconnect(); }
+    }
+    // Prevent accidental double-disconnection via copying
+    AutoConnect(const AutoConnect&) = delete;
+    AutoConnect& operator=(const AutoConnect&) = delete;
+    
+    AutoConnect(AutoConnect&& other) noexcept 
+        : conn_(std::move(other.conn_)), connected_(std::exchange(other.connected_, false)) {}
+    
+    AutoConnect& operator=(AutoConnect&& other) noexcept {
+        if (this != &other) {
+            if (connected_) conn_.disconnect();
+            conn_ = std::move(other.conn_);
+            connected_ = std::exchange(other.connected_, false);
+        }
+        return *this;
+    }
+
     void send(const Message& msg) {
         if (!connected_) { conn_.connect(); connected_ = true; }
         conn_.send(msg);
-    }
-    ~AutoConnect() {
-        if (connected_) { conn_.disconnect(); }
     }
 };
 ```
