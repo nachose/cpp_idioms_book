@@ -94,6 +94,7 @@ public:
     }
 
     void write(const std::string& path, std::span<const char> data) {
+        if (!compress_fn_) return;
         auto compressed = compress_fn_(data);
         // write compressed data to file...
     }
