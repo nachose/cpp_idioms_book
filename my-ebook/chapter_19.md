@@ -122,7 +122,7 @@ You can document invariants explicitly by checking them at the entry and exit of
 class IntQueue {
 public:
     explicit IntQueue(size_t capacity)
-        : capacity_(capacity)
+        : data_(capacity), capacity_(capacity)
     {
         Ensures(empty());
         Ensures(full() == (capacity == 0));
