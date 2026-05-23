@@ -187,7 +187,7 @@ private:
         F value_;
     };
 
-    std::array<char, MaxSize> storage_;
+    alignas(Concept) std::array<char, MaxSize> storage_;
     bool hasValue_ = false;
 };
 ```
