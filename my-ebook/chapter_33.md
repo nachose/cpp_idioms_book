@@ -112,7 +112,27 @@ The C++26 standard introduces a language-level reflection facility based on the 
 
 enum class Color { Red, Green, Blue };
 
-consteval {
+```cpp
+// Correction for lines 115-124
+consteval void reflect_enum() {
+    std::meta::info enum_info = ^Color;
+    for (std::meta::info member : std::meta::members_of(enum_info)) {
+        std::meta::info name = std::meta::name_of(member);
+    }
+}
+
+// Correction for lines 132-145
+consteval std::string generate_to_string() {
+    std::meta::info enum_info = ^Color;
+    std::vector<std::meta::info> enumerators = std::meta::members_of(enum_info);
+    std::string out = "std::string to_string(Color c) {\n  switch (c) {\n";
+    for (auto e : enumerators) {
+        out += "    case " + std::string(std::meta::name_of(e)) + ": "
+             + "return \"" + std::string(std::meta::name_of(e)) + "\";\n";
+    }
+    out += "  }\n  return \"(unknown)\";\n}";
+    return out;
+}
     // std::meta::info representing the enum type
     std::meta::info enum_info = ^Color;
 
