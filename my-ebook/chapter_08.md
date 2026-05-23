@@ -1340,7 +1340,14 @@ template<typename... Types>
 class Visitor {
 public:
     virtual ~Visitor() = default;
-    virtual void visit(Types&...) = 0;  // Actually multiple overloads
+template<typename... Types>
+class Visitor {
+public:
+    virtual ~Visitor() = default;
+    virtual void visit(int&) = 0;
+    virtual void visit(double&) = 0;
+    // Add visit overloads for each type in Types...
+};
 };
 
 // Alternative: generate visit overloads for each type
