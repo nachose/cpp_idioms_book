@@ -514,13 +514,32 @@ public:
         std::swap(capacity_, other.capacity_);
         std::swap(isLarge_, other.isLarge_);
 
+    void swap(SmallVector& other) noexcept {
         if (isInline() && other.isInline()) {
-            for (size_t i = 0; i < std::min(size_, other.size_); ++i) {
+            for (size_t i = 0; i < std::max(size_, other.size_); ++i) {
                 std::swap(data_[i], other.data_[i]);
             }
+        } else if (isInline() && !other.isInline()) {
+            T* tempHeap = other.heapBuffer_;
+            size_t tempCap = other.capacity_;
+            other.heapBuffer_ = nullptr;
+            other.data_ = other.inlineBuffer_;
+            
+            heapBuffer_ = tempHeap;
+            capacity_ = tempCap;
+            data_ = heapBuffer_;
+        } else if (!isInline() && other.isInline()) {
+            other.swap(*this);
+            return;
         } else {
-            std::swap(data_, other.data_);
+            std::swap(heapBuffer_, other.heapBuffer_);
+            std::swap(capacity_, other.capacity_);
+            data_ = heapBuffer_;
+            other.data_ = other.heapBuffer_;
         }
+        std::swap(size_, other.size_);
+        std::swap(isLarge_, other.isLarge_);
+    }
     }
 
 private:
