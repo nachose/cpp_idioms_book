@@ -717,9 +717,14 @@ auto with_logging(F fn, std::string_view name) {
     return [fn = std::move(fn), name = std::string(name)]
            (auto&&... args) {
         std::cout << "Entering: " << name << "\n";
-        auto result = fn(std::forward<decltype(args)>(args)...);
-        std::cout << "Exiting: " << name << "\n";
-        return result;
+        if constexpr (std::is_void_v<std::invoke_result_t<F, decltype(args)...>>) {
+            fn(std::forward<decltype(args)>(args)...);
+            std::cout << "Exiting: " << name << "\n";
+        } else {
+            auto result = fn(std::forward<decltype(args)>(args)...);
+            std::cout << "Exiting: " << name << "\n";
+            return result;
+        }
     };
 }
 
