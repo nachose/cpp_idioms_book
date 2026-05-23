@@ -126,7 +126,8 @@ public:
     
     // Start the actor's message processing loop
     void start() {
-        running_ = true;
+        bool expected = false;
+        if (!running_.compare_exchange_strong(expected, true)) return;
         processing_thread_ = std::thread(&Actor::processMessages, this);
     }
     
