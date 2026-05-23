@@ -1201,7 +1201,26 @@ public:
 
 protected:
     Counted() = default;
+template<typename Derived>
+class Counted {
+public:
+    void addRef() const { ++refCount_; }
+
+    void release() const {
+        if (--refCount_ == 0) {
+            delete static_cast<const Derived*>(this);
+        }
+    }
+
+    int refCount() const { return refCount_; }
+
+protected:
+    Counted() = default;
     Counted(const Counted&) : refCount_(0) {}
+
+private:
+    mutable int refCount_ = 0;
+};
 };
 ```
 
