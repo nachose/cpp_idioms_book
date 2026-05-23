@@ -849,7 +849,7 @@ But assertions can also *mask* undefined behavior if the assertion itself has un
 assert(p != nullptr && *p == 42);  // UB if p is null: *p is evaluated
 ```
 
-If `p` is null, the expression `*p == 42` dereferences a null pointer before the `&&` short-circuit can save it. The fix is to separate the checks:
+If p is null, the expression p != nullptr is false, and the short-circuiting behavior of && prevents the evaluation of *p == 42. However, separating the checks is still recommended for better diagnostics:
 
 ```cpp
 assert(p != nullptr);
