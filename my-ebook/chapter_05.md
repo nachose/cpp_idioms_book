@@ -105,7 +105,7 @@ private:
 
 A key insight is that constructor delegation doesn't call the default constructor then the delegated constructor—it directly constructs the object through the delegated path. This is more efficient than the pre-C++11 pattern of `init()` methods that ran after construction.
 
-Delegation does have limitations. You cannot have multiple delegations (A delegates to B, which delegates to C)—at least one must be non-delegating. Also, if your constructors have different exception guarantees, delegating from one to another can change exception safety. Ensure the delegated constructor provides the appropriate guarantees for all code paths.
+Delegation does have limitations. You cannot have circular delegations (A delegates to B, and B delegates to A), as this would lead to infinite recursion during construction. Also, if your constructors have different exception guarantees, delegating from one to another can change exception safety. Ensure the delegated constructor provides the appropriate guarantees for all code paths.
 
 A common pattern combines delegation with factory methods when you want to prevent direct construction:
 
