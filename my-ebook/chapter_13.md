@@ -275,7 +275,16 @@ public:
     std::optional<T> pop() {
         Node* old_head = head_.load(std::memory_order_acquire);
         while (old_head != nullptr) {
-            Node* next = old_head->next;
+    std::optional<T> pop() {
+        std::shared_ptr<Node> old_head = head_.load(std::memory_order_acquire);
+        while (old_head && !head_.compare_exchange_weak(
+            old_head, old_head->next,
+            std::memory_order_release, 
+            std::memory_order_acquire)) {
+            // old_head is updated by compare_exchange_weak on failure
+        }
+        return old_head ? std::make_optional(old_head->data) : std::nullopt;
+    }
             if (head_.compare_exchange_weak(
                     old_head, next,
                     std::memory_order_release,
