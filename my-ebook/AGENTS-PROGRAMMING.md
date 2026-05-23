@@ -14,7 +14,6 @@ Primary goal:
 Code policy:
 
 - Code is illustrative, not authoritative.
-- Never include more than 30% code by volume.
 - Avoid full implementations; show fragments only.
 
 Explanations:
