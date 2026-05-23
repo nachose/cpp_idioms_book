@@ -221,6 +221,7 @@ The Rule of Five is explicit even when defaulted or deleted, making the class's 
 // file_system.cpp
 #include "file_system.h"
 
+#include <filesystem>
 #include <fstream>
 #include <system_error>
 
