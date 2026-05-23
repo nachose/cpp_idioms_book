@@ -1172,13 +1172,8 @@ struct TypeList {
     template<typename T>
     static constexpr size_t index = []() {
         size_t result = 0;
-    template<typename T>
-    static constexpr size_t index = []() {
-        size_t result = 0;
         size_t i = 0;
         ((std::is_same_v<Types, T> ? (result = i, true) : (i++, false)), ...);
-        return result;
-    }();
         return result;
     }();
 };
