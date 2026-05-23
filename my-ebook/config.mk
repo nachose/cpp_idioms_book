@@ -1,4 +1,4 @@
-BOOK := java_dependency_injection
+BOOK := cpp_idioms
 
 CHAPTERS := \
     001-preface.md \
@@ -24,4 +24,14 @@ CHAPTERS := \
     chapter_20.md \
     chapter_21.md \
     chapter_22.md \
-    chapter_23.md
+    chapter_23.md \
+    chapter_24.md \
+    chapter_25.md \
+    chapter_26.md \
+    chapter_27.md \
+    chapter_28.md \
+    chapter_29.md \
+    chapter_30.md \
+    chapter_31.md \
+    chapter_32.md \
+    chapter_33.md
