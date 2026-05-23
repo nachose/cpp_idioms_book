@@ -176,8 +176,24 @@ struct FilterIntegral {
     template <typename... Accum>
     struct Impl;
 
+    template <typename... Accum>
+    struct Impl;
+
     template <typename T, typename... Rest, typename... Accum>
     struct Impl<T, Rest..., Accum...> {
+        using type = typename std::conditional_t<
+            Predicate<T>::value,
+            typename Impl<Rest..., Accum..., T>::type,
+            typename Impl<Rest..., Accum...>::type
+        >;
+    };
+
+    template <typename... Accum>
+    struct Impl<Accum...> {
+        using type = TypeList<Accum...>;
+    };
+
+    using type = typename Impl<Ts...>::type;
         using type = typename std::conditional_t<
             Predicate<T>::value,
             typename Impl<Rest..., Accum..., T>::type,
