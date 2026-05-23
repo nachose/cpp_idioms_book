@@ -483,12 +483,11 @@ public:
     // Return a simplified expression when scalar is zero
     auto optimized() const {
         if constexpr (std::is_same_v<LHS, ScalarExpr>) {
-            // Both operands are scalars — fold at compile time
             return ScalarExpr(lhs_[0] * scalar_);
         } else if (scalar_ == 0.0) {
-            return ScalarExpr(0.0);  // All zeros
+            return ScalarExpr(0.0);
         } else {
-            return *this;  // No simplification possible
+            return *this;
         }
     }
 };
