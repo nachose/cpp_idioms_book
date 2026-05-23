@@ -1357,7 +1357,23 @@ struct VisitorImpl;
 // Base case: no more types
 template<typename Visitor>
 struct VisitorImpl<Visitor> {
-    static void accept(Visitor&, typename std::tuple<Types...>&) {}
+template<typename Visitor, typename... Types>
+struct VisitorImpl;
+
+// Base case: no more types
+template<typename Visitor, typename... Types>
+struct VisitorImpl<Visitor, Types...> {
+    static void accept(Visitor&, std::tuple<Types...>&) {}
+};
+
+// Recursive: generate visit for head type
+template<typename Visitor, typename... Types, typename Head, typename... Tail>
+struct VisitorImpl<Visitor, Types..., Head, Tail...> {
+    static void accept(Visitor& v, std::tuple<Types...>& t) {
+        v.visit(std::get<Head>(t));
+        VisitorImpl<Visitor, Types..., Tail...>::accept(v, t);
+    }
+};
 };
 
 // Recursive: generate visit for head type
