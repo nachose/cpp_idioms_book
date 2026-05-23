@@ -19,7 +19,7 @@ An adapter converts one interface to another. A *class adapter* inherits from bo
 
 An abstract factory parameterized by a type list, where each type in the list corresponds to a product. A `std::index_sequence` drives the instantiation of factory functions. Enables compile-time creation of factory hierarchies without code duplication.
 
-- **Minimum standard**: C++11 (variadic templates, index sequences)
+- **Minimum standard**: C++14 (variadic templates, index sequences)
 - **When to use**: You need families of related objects, and the product types are known at compile time.
 
 ### Actor Model (Concurrent)
