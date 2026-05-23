@@ -1139,12 +1139,21 @@ public:
     }
 
 protected:
+    virtual ~RefCounted() { delete refCount_; }
+
+    void addRef() const { ++*refCount_; }
+    void release() const {
+        if (--*refCount_ == 0) {
+            delete this;
+        }
+    }
+
+protected:
     RefCounted() : refCount_(new int(1)) {}
     RefCounted(const RefCounted&) : refCount_(new int(1)) {}
 
 private:
     mutable int* refCount_;
-};
 ```
 
 Each `CountedPtr` increments the reference count when copying and decrements when destructing. When the count reaches zero, the object deletes itself.
