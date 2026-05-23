@@ -60,8 +60,11 @@ public:
         label_ = std::move(lbl);
         return *this;
     }
-    auto build() const -> Widget {
+    auto build() const & -> Widget {
         return Widget{width_, height_, color_, label_};
+    }
+    auto build() && -> Widget {
+        return Widget{width_, height_, color_, std::move(label_)};
     }
 };
 ```
