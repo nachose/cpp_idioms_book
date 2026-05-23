@@ -117,8 +117,8 @@ public:
     // Move-only
     TextEditor(const TextEditor&) = delete;
     TextEditor& operator=(const TextEditor&) = delete;
-    TextEditor(TextEditor&&) = default;
-    TextEditor& operator=(TextEditor&&) = default;
+    TextEditor(TextEditor&&);
+    TextEditor& operator=(TextEditor&&);
     
 private:
     struct Impl;
