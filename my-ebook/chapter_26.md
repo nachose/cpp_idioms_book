@@ -412,13 +412,19 @@ public:
 
         auto operator*() const { return *current_; }
 
-        iterator& operator++() {
-            ++current_;
-            return *this;
-        }
+        auto operator*() const { return *current_; } 
 
-        bool operator==(const iterator& other) const {
-            return current_ == other.current_;
+        iterator& operator++() { 
+            ++current_; 
+            return *this; 
+        } 
+
+        bool operator==(const iterator& other) const { 
+            return current_ == other.current_; 
+        } 
+
+        bool operator==(std::default_sentinel_t) const { 
+            return current_ == sentinel_ || !(*pred_)(*current_); 
         }
     };
 
