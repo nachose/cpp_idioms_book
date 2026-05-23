@@ -1091,7 +1091,7 @@ public:
         : object_size_(obj_size), alignment_(align)
     {
         for (size_t i = 0; i < capacity; ++i) {
-            void* mem = std::aligned_alloc(align, obj_size);
+            void* mem = std::aligned_alloc(align, (obj_size + align - 1) & ~(align - 1));
             blocks_.push_back({mem, true});
         }
     }
