@@ -367,7 +367,7 @@ struct Buffer {
 std::shared_ptr<Buffer> buffer = std::make_shared<Buffer>();
 
 // Aliasing: share ownership of 'buffer' but point to 'buffer->data'
-std::shared_ptr<char> charData(buffer.get(), buffer->data);
+std::shared_ptr<char> charData(buffer, buffer->data);
 
 // Now:
 // - charData uses buffer's reference count
