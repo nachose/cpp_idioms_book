@@ -274,8 +274,7 @@ These traits are essential for writing generic wrappers that must forward calls 
 Every standard trait that provides a `::value` member has a corresponding `_v` alias template (C++14 and later):
 
 ```cpp
-template <bool B>
-using is_integral_v = std::is_integral<T>::value;
+template <typename T>\ninline constexpr bool is_integral_v = std::is_integral<T>::value;
 ```
 
 The `_v` suffix may seem trivial, but it significantly improves readability. Compare:
