@@ -137,7 +137,21 @@ struct alignas(64) CacheAligned {
 };
 ```
 
-A `CacheAligned` object is guaranteed to start at a 64-byte boundary. When allocated on the stack, the compiler adjusts the stack pointer to satisfy the alignment. When allocated on the heap, `new` and `std::allocator` respect the alignment through `std::aligned_alloc` or equivalent platform-specific mechanisms. A `std::vector<CacheAligned>` ensures each element is also 64-byte aligned, because `std::vector` allocates storage with correct alignment for the element type.
+A `std::vector<CacheAligned>` ensures each element is also 64-byte aligned in C++17 and later. For older C++ standards, `std::vector` does not guarantee over-alignment; in those cases, you should use a custom allocator or a wrapper struct:
+
+```cpp
+template <typename T, size_t Alignment>
+struct AlignedAllocator {
+    using value_type = T;
+    T* allocate(std::size_t n) {
+        void* ptr = nullptr;
+        if (posix_memalign(&ptr, Alignment, n * sizeof(T)) != 0) throw std::bad_alloc();
+        return reinterpret_cast<T*>(ptr);
+    }
+    void deallocate(T* p, std::size_t) { free(p); }
+};
+
+std::vector<CacheAligned, AlignedAllocator<CacheAligned, 64>> vec;
 
 The benefit appears when you access fields of the struct in a hot loop. If `CacheAligned` is stored in an array, each element occupies exactly one cache line and no element's data spills into the next line. Iterating over the array touches `N` cache lines for `N` elements — the minimum possible.
 
