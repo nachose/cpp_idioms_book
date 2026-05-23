@@ -136,6 +136,7 @@ public:
 
     // Constructor forwarding for stateful policies
     template<typename... Args>
+    requires (sizeof...(Args) > 0 && (... && !std::is_same_v<std::remove_cvref_t<Args>, Component>))
     explicit Component(Args&&... args)
         : logger_(std::forward<Args>(args)...) {}
 
