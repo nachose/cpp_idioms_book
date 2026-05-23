@@ -52,7 +52,46 @@ template <typename T>
 class Task {
 public:
     struct promise_type {
-        T result_;
+    struct promise_type {
+        std::optional<T> result_;
+        std::exception_ptr exception_;
+        std::coroutine_handle<> continuation_;
+
+        Task get_return_object() {
+            return Task{
+                std::coroutine_handle<promise_type>::from_promise(*this)
+            };
+        }
+
+        // Lazy by default: don't start until awaited.
+        std::suspend_always initial_suspend() noexcept { return {}; }
+
+        // Keep the frame alive after completion.
+        std::suspend_always final_suspend() noexcept {
+            // If there's a continuation, resume it.
+            if (continuation_) {
+                continuation_.resume();
+            }
+            return {};
+        }
+
+        void return_value(T value) {
+            result_ = std::move(value);
+        }
+
+        void unhandled_exception() noexcept {
+            exception_ = std::current_exception();
+        }
+    };
+
+    // ... (await_resume needs to be updated to handle the optional)
+
+    T await_resume() {
+        if (handle_.promise().exception_) {
+            std::rethrow_exception(handle_.promise().exception_);
+        }
+        return std::move(*handle_.promise().result_);
+    }
         std::exception_ptr exception_;
         std::coroutine_handle<> continuation_;
 
