@@ -455,16 +455,20 @@ public:
 
             if (other.isInline()) {
                 for (size_t i = 0; i < other.size_; ++i) {
-                    new (&data_[i]) T(std::move(other.data_[i]));
+                    new (&inlineBuffer_[i]) T(std::move(other.data_[i]));
+                    other.data_[i].~T();
                 }
                 size_ = other.size_;
                 data_ = inlineBuffer_;
+                isLarge_ = 0;
             } else {
                 heapBuffer_ = other.heapBuffer_;
                 capacity_ = other.capacity_;
                 data_ = heapBuffer_;
                 size_ = other.size_;
+                isLarge_ = 1;
                 other.heapBuffer_ = nullptr;
+                other.data_ = other.inlineBuffer_;
             }
             other.size_ = 0;
         }
