@@ -1235,7 +1235,7 @@ auto counter = [count = 0](int value) mutable {
 };
 
 auto end = std::remove_if(data.begin(), data.end(), std::ref(counter));
-std::cout << std::get<0>(counter);  // Correct count — accessed through reference wrapper
+// The internal state 'count' is not accessible here. Use the capture-by-reference pattern instead.
 ```
 
 `std::ref` creates a `reference_wrapper` that the algorithm copies — but the wrapper itself copies like a pointer, so all copies reference the same underlying lambda. The count accumulated by the algorithm is visible through the original lambda after the algorithm completes.
