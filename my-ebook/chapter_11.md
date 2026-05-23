@@ -124,7 +124,7 @@ template<typename Container, typename BinaryOp>
 decltype(auto) fold(const Container& c, BinaryOp op) {
     auto it = std::begin(c);
     if (it == std::end(c)) {
-        return decltype(*it){};
+        return std::decay_t<decltype(*it)>{};
     }
 
     auto result = *it;
