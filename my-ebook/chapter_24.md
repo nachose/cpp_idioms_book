@@ -61,6 +61,7 @@ public:
     }
 
     void write(const std::string& path, std::span<const char> data) {
+        if (!strategy_) return;
         auto compressed = strategy_->compress(data);
         // write compressed data to file...
     }
