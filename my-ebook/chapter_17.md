@@ -1840,7 +1840,19 @@ struct EliminateIdentities {
 
 // Specialization: multiply by zero becomes zero
 template<typename T>
-struct EliminateIdentities<BinExpr<MulOp, Scalar<0>, T>> {
+template<int N>
+struct Scalar {
+    static constexpr int value = N;
+    auto operator[](size_t) const { return N; }
+    size_t size() const { return 0; } // Scalars have no size in this context
+};
+
+// Identity elimination policy: removes no-op operations
+template<typename Expr>
+struct EliminateIdentities {
+    // Default: no transformation
+    using type = Expr;
+};
     using type = Scalar<0>;
 };
 
