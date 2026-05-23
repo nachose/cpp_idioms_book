@@ -1131,7 +1131,11 @@ public:
 
         for (size_t i = 0; i < capacity; ++i) {
             void* slot = pool_ + i * sizeof(T);
-            *static_cast<void**>(slot) = freeList_;
+    explicit FixedPool(size_t capacity) {
+        static_assert(sizeof(T) >= sizeof(void*), "Type T must be at least as large as a pointer to be used in FixedPool");
+        pool_ = static_cast<char*>(std::aligned_alloc(
+            alignof(T), capacity * sizeof(T)));
+        freeList_ = nullptr;
             freeList_ = slot;
         }
     }
