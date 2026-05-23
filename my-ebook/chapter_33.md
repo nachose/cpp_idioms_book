@@ -374,7 +374,9 @@ struct Person {
 
 nlohmann::json to_json(const Person& p) {
     nlohmann::json j;
+    #define X TO_JSON_HELPER
     PERSON_FIELDS
+    #undef X
     return j;
 }
 
