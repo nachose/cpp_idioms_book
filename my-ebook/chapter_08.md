@@ -243,12 +243,10 @@ public:
         std::forward<U>(value))) {}
 
     ErasureWrapper(ErasureWrapper&& other) noexcept
-        : wrapper_(other.wrapper_ ? other.wrapper_->clone() : nullptr) {}
+        : wrapper_(std::move(other.wrapper_)) {}
 
-    ErasureWrapper& operator=(ErasureWrapper&& other) {
-        if (this != &other) {
-            wrapper_ = other.wrapper_ ? other.wrapper_->clone() : nullptr;
-        }
+    ErasureWrapper& operator=(ErasureWrapper&& other) noexcept {
+        wrapper_ = std::move(other.wrapper_);
         return *this;
     }
 
