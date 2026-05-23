@@ -23,7 +23,10 @@ protected:
         auto now = std::chrono::system_clock::now();
         auto t = std::chrono::system_clock::to_time_t(now);
         std::array<char, 64> buf;
-        std::strftime(buf.data(), buf.size(), fmt_.c_str(), std::gmtime(&t));
+    std::string formatTimestamp() const {
+        auto now = std::chrono::system_clock::now();
+        return std::format("{:%Y-%m-%d %H:%M:%S}", now);
+    }
         return std::string(buf.data());
     }
 
