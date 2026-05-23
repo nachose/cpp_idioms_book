@@ -191,9 +191,14 @@ public:
     void encode(const std::filesystem::path& input,
                 const std::filesystem::path& output,
                 const EncodeSettings& settings) {
-        auto source  = Demuxer::open(input);        // Open and demux
-        auto stream  = source->best_video_stream();
+        auto source = Demuxer::open(input);
+        if (!source) return; // Handle error
+
+        auto stream = source->best_video_stream();
+        if (!stream) return;
+
         auto decoder = CodecFactory::create(stream->codec_id());
+        if (!decoder) return;
         decoder->open(stream);
 
         auto encoder = CodecFactory::create(settings.codec);
