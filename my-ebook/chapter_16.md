@@ -486,7 +486,7 @@ Fold expressions shine in four common patterns.
 ```cpp
 template <typename... Ts>
 bool all_true(Ts... args) {
-    return (args && ...);  // unary left fold over &&
+    return (args && ...);  // unary right fold over &&
 }
 
 // all_true(true, true, false) returns false
