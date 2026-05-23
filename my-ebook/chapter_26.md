@@ -468,7 +468,7 @@ namespace detail {
 // The pipe operator overload.
 template <std::ranges::viewable_range R, std::predicate Pred>
 constexpr auto operator|(R&& r, detail::take_while_adaptor adaptor) {
-    // This requires more work to pass the predicate through — see below.
+    return adaptor(std::forward<R>(r), adaptor.pred_);
 }
 
 inline constexpr detail::take_while_adaptor take_while;
