@@ -1588,7 +1588,7 @@ std::optional can model computations that might not produce a value:
 
 template<typename T>
 class Lazy {
-    std::optional<T> value_;
+    mutable std::optional<T> value_;
     std::function<T()> factory_;
 
 public:
