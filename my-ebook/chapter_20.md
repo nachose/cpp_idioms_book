@@ -655,7 +655,9 @@ void advance(Iter& it, typename Iter::difference_type n) {
         it += n;
     } else {
         while (n > 0) { ++it; --n; }
-        while (n < 0) { --it; ++n; }
+        if constexpr (std::bidirectional_iterator<Iter>) {
+            while (n < 0) { --it; ++n; }
+        }
     }
 }
 ```
