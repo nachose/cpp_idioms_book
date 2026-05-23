@@ -1236,7 +1236,7 @@ int main() {
         for (int x : data) {
             result.push_back(x * 2);
             // Tap to debug: print each step
-            tap([](int v) { std::cout << "Processing: " << v << "\n"; })(v);
+            tap([](int v) { std::cout << "Processing: " << v << "\n"; })(x);
         }
         return result;
     }();
