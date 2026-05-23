@@ -1277,7 +1277,7 @@ Error codes communicate failure through the function's return channel. The class
 #include <system_error>
 
 enum class FileError {
-    NotFOund = 1,
+    NotFound = 1,
     PermissionDenied,
     Corrupted,
 };
