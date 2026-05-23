@@ -49,8 +49,12 @@ The limits of trait-based reflection are quickly reached: traits can only answer
 What if you need to check whether a type has a member function named `.begin()` — but there is no trait for that? The detection idiom fills the gap. It relies on `void_t`, an alias template that always produces `void`, and uses it to drive SFINAE:
 
 ```cpp
-template <typename...>
-using void_t = void;
+template <typename T, typename = std::void_t<>>
+struct has_begin : std::false_type {};
+
+template <typename T>
+struct has_begin<T, std::void_t<decltype(std::declval<T>().begin())>>
+    : std::true_type {};
 
 template <typename T, typename = void>
 struct has_begin : std::false_type {};
