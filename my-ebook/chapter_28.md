@@ -1576,7 +1576,18 @@ public:
     create(const std::string& connection_string) {
         auto handle = open_connection(connection_string);
         if (!handle) {
-            return std::unexpected(make_error_code(Error::ConnectionFailed));
+enum class ConnectionError { ConnectionFailed };
+
+class DatabaseConnection {
+public:
+    static std::expected<DatabaseConnection, std::error_code> 
+    create(const std::string& connection_string) {
+        auto handle = open_connection(connection_string);
+        if (!handle) {
+            return std::unexpected(make_error_code(ConnectionError::ConnectionFailed));
+        }
+        return DatabaseConnection(std::move(handle));
+    }
         }
         return DatabaseConnection(std::move(handle));
     }
