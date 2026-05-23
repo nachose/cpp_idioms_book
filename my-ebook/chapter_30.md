@@ -400,9 +400,9 @@ private:
     std::vector<Observer> observers_;
 };
 
-class ViewModel : public PropertyMixin<ViewModel, std::string>,
+class ViewModel : public PropertyMixin<ViewModel, int>,
                   public PropertyMixin<ViewModel, int> {
-    // Error: two base classes with the same type!
+    // Error: cannot inherit from the same class twice!
 };
 ```
 
