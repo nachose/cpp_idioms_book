@@ -242,14 +242,14 @@ Iterators are the bridge between containers and algorithms. A well-designed iter
 
 Every iterator belongs to a category that describes what operations it supports. The categories form a hierarchy from most constrained to most powerful:
 
-| Category | Operations | Examples |
-|---|---|---|
-| `std::input_iterator_tag` | `++it`, `*it` (read-only, single-pass) | Stream iterators |
-| `std::output_iterator_tag` | `++it`, `*it = value` (write-only, single-pass) | `std::back_insert_iterator` |
-| `std::forward_iterator_tag` | Input + output + multi-pass | `std::forward_list` iterator |
-| `std::bidirectional_iterator_tag` | Forward + `--it` | `std::list`, `std::set` iterator |
-| `std::random_access_iterator_tag` | Bidirectional + `it + n`, `it - n`, `it[n]`, `<`, `>` | `std::vector`, `std::deque` iterator |
-| `std::contiguous_iterator_tag` (C++20) | Random access + elements are contiguous in memory | `std::vector`, `std::array`, `std::string` |
+| Category                               | Operations                                            | Examples                                   |
+| -------------------------------------- | ----------------------------------------------------- | ------------------------------------------ |
+| `std::input_iterator_tag`              | `++it`, `*it` (read-only, single-pass)                | Stream iterators                           |
+| `std::output_iterator_tag`             | `++it`, `*it = value` (write-only, single-pass)       | `std::back_insert_iterator`                |
+| `std::forward_iterator_tag`            | Input + output + multi-pass                           | `std::forward_list` iterator               |
+| `std::bidirectional_iterator_tag`      | Forward + `--it`                                      | `std::list`, `std::set` iterator           |
+| `std::random_access_iterator_tag`      | Bidirectional + `it + n`, `it - n`, `it[n]`, `<`, `>` | `std::vector`, `std::deque` iterator       |
+| `std::contiguous_iterator_tag` (C++20) | Random access + elements are contiguous in memory     | `std::vector`, `std::array`, `std::string` |
 
 Choose the lowest category that your container can support. If your container is a singly-linked list, provide forward iterators — claiming bidirectional iterators would require the iterator to discover the previous element, which would force O(n) storage or O(n) traversal per decrement. If your container is an array, provide random-access or contiguous iterators — claiming anything less would prevent users from using `std::sort` or pointer arithmetic.
 
@@ -770,6 +770,13 @@ The `std::unique_ptr`-based approach allocates every element on the heap. For sm
         }
         return *this;
     }
+
+    template <typename T>
+    T* get() {
+        auto* model = dynamic_cast<Model<T>*>(active_);
+        return model ? reinterpret_cast<T*>(&model->storage_) : nullptr;
+    }
+};
 ```
 
 The buffer is large enough to hold both the vtable pointer and the value for typical small types (16–64 bytes is common). Types larger than the buffer fall back to heap allocation by storing a `unique_ptr<Concept>` in the buffer. The `std::any` implementation in libstdc++ and libc++ uses precisely this hybrid approach.
