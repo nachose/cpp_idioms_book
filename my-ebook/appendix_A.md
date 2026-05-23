@@ -121,7 +121,7 @@ A smaller revision focused on library improvements and language polish:
 - **`std::expected<T, E>`**: the value-or-error vocabulary type. Provides a monadic interface (`and_then`, `or_else`, `transform`, `transform_error`). Preferred over exceptions for error-expected paths.
 - **`std::optional` monadic operations**: `and_then`, `transform`, `or_else` directly on `optional`. Standardized existing practice.
 - **Deducing `this`**: non-static member functions can deduce their own class type. Enabled CRTP-like patterns without CRTP. Simplified mixin composition.
-- **`static operator[]`**: multidimensional subscript operators. Enabled `json::document doc; doc["key1"]["key2"]` with cleaner syntax.
+- **`static operator[]`**: allows the subscript operator to be declared as a `static` member function.
 - **`if consteval`**: compile-time detection of constant evaluation context. Complement to `std::is_constant_evaluated`.
 - **`std::print` / `std::println`**: Python-like printing. Formatted output to stdout/stderr without iostream overhead.
 - **`std::flat_map` / `std::flat_set`**: sorted-vector containers with STL interface. Lower memory, better cache behavior than tree-based maps.
