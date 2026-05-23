@@ -453,7 +453,7 @@ static_assert(std::is_array_v<int[5]>);
 static_assert(std::is_enum_v<enum class Color>);
 static_assert(std::is_class_v<std::string>);
 static_assert(std::is_union_v<some_union>);
-static_assert(std::is_function_v(void(int)));
+static_assert(std::is_function_v<void(int)>);
 static_assert(std::is_pointer_v<int*>);
 ```
 
