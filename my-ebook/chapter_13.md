@@ -18,7 +18,12 @@ Consider a simple counter class:
 
 ```cpp
 class Counter {
-    int value = 0;
+class Counter {
+    int value_ = 0;
+public:
+    void incrementValue() { ++value_; }
+    int getValue() const { return value_; }
+};
 public:
     void increment() { ++value; }
     int get() const { return value; }
