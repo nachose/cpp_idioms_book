@@ -1310,7 +1310,7 @@ namespace std {
 std::error_code read_config(const std::string& path, Config& out) {
     // On failure:
     if (!file_exists(path)) {
-        return FileError::NotFOund;
+        return FileError::NotFound;
     }
     // On success:
     return {};  // default-constructed error_code means "no error"
