@@ -334,7 +334,7 @@ The SoA layout is far more amenable to SIMD (Single Instruction, Multiple Data) 
 // SoA with explicit SIMD (using x86 SSE/AVX intrinsics):
 void update_soa_simd(ParticleSystem& ps, float dt) {
     const __m128 dt_vec = _mm_set1_ps(dt);
-    for (size_t i = 0; i < ps.x.size(); i += 4) {
+    for (size_t i = 0; i + 3 < ps.x.size(); i += 4) {
         __m128 x  = _mm_load_ps(&ps.x[i]);
         __m128 vx = _mm_load_ps(&ps.vx[i]);
         x = _mm_add_ps(x, _mm_mul_ps(vx, dt_vec));
