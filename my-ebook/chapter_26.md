@@ -155,7 +155,7 @@ public:
         }
     };
 
-    Iterator begin() { return Iterator(&std::cin, 0); }
+    Iterator begin() { return Iterator(&std::cin); }
     std::default_sentinel_t end() { return {}; }
 };
 
