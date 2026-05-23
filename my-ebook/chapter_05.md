@@ -269,9 +269,10 @@ public:
     
     Resource& operator=(const Resource& other) {
         if (this != &other) {
+            int* new_data = new int[100];
+            std::copy(other.data_, other.data_ + 100, new_data);
             delete[] data_;
-            data_ = new int[100];
-            std::copy(other.data_, other.data_ + 100, data_);
+            data_ = new_data;
         }
         return *this;
     }
