@@ -553,7 +553,7 @@ T* copy(T* first, T* last, T* result) {
 ```
 
 The `memmove` version executes a single instruction sequence that processes multiple elements per cycle, leverages SIMD when available, and avoids the loop overhead of bounds checks and pointer increments. The abstraction cost of using `std::copy` instead of `memcpy` is zero — the generated machine code is identical.
-
+C++20 introduced std::to_address as a utility for contiguous iterators, providing a uniform way to obtain the raw pointer without going through operator->. This enables library authors to write a single overload set that works with both raw pointers and contiguous iterator wrappers:
 C++17 introduced `std::to_address` as a utility for contiguous iterators, providing a uniform way to obtain the raw pointer without going through `operator->`. This enables library authors to write a single overload set that works with both raw pointers and contiguous iterator wrappers:
 
 ```cpp
