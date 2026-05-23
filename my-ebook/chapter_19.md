@@ -152,7 +152,7 @@ private:
         Expects(count_ <= capacity_);
         Expects(read_pos_ < capacity_);
         Expects(write_pos_ < capacity_);
-        Expects(empty() || (read_pos_ != write_pos_));
+        Expects((read_pos_ == write_pos_) == (empty() || full()));
     }
 
     std::vector<int> data_;
