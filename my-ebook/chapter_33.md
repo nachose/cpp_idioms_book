@@ -104,7 +104,7 @@ Each detection is a standalone trait. When many detections are needed together, 
 The C++26 standard introduces a language-level reflection facility based on the `^` operator and the `std::meta` namespace. It is a compile-time system: reflection values are `consteval` and produce `std::meta::info` objects that are not available at runtime — they are used to generate code, not to inspect data.
 
 ```cpp
-#include <stdmeta/meta.h>
+#include <meta>
 
 enum class Color { Red, Green, Blue };
 
