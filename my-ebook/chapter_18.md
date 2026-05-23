@@ -109,7 +109,12 @@ private:
 };
 ```
 
-The code above illustrates a subtlety: the naive implementation is broken. If `push_back` throws (e.g., due to memory exhaustion), `total_` has already been incremented but the item was not added. The invariant "total_ equals sum of items_ prices" is violated. A properly basic-safe implementation would either order the operations so that failure does not corrupt state (perform `push_back` first, then update `total_`), or use a separate mechanism to ensure consistency.
+    void add_item(Item item) {
+        // Capture the price before moving the item
+        double price = item.price();
+        items_.push_back(std::move(item));
+        total_ += price;
+    }
 
 The basic guarantee requires careful thought about operation ordering and side effects. Each mutating operation must either succeed fully or leave every object in a consistent state—even if that state is not the one originally intended. In practice, this means:
 
