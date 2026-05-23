@@ -248,10 +248,7 @@ The Pimpl class is defined in the `.cpp` file, invisible to the header's consume
 Forward declare in limited, specific situations:
 
 ```cpp
-namespace std {
-    template <typename T>
-    class unique_ptr;           // Forward declare only
-}
+class FileSystem;  // Forward declare user types
 ```
 
 However, forward declarations of standard library types are fragile and non-portable. In general, prefer including the full header. The only case where forward declarations are clearly justified is for Pimpl/Pointer-to-Implementation, where the header includes only `std::unique_ptr<Impl>` and the `Impl` type is left incomplete.
