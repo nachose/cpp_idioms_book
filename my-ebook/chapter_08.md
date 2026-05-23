@@ -149,7 +149,27 @@ template<typename Signature, size_t MaxSize = 32>
 class InlineFunction;
 
 template<typename R, typename... Args, size_t MaxSize>
-class InlineFunction<R(Args...), MaxSize> {
+    InlineFunction(const InlineFunction&) = delete;
+    InlineFunction& operator=(const InlineFunction&) = delete;
+
+    InlineFunction(InlineFunction&& other) noexcept : hasValue_(other.hasValue_) {
+        if (hasValue_) {
+            new (storage_.data()) Model<F>(std::move(*reinterpret_cast<Model<F>*>(other.storage_.data())));
+            other.hasValue_ = false;
+        }
+    }
+
+    InlineFunction& operator=(InlineFunction&& other) noexcept {
+        if (this != &other) {
+            if (hasValue_) model()->~Concept();
+            hasValue_ = other.hasValue_;
+            if (hasValue_) {
+                new (storage_.data()) Model<F>(std::move(*reinterpret_cast<Model<F>*>(other.storage_.data())));
+                other.hasValue_ = false;
+            }
+        }
+        return *this;
+    }
 public:
     template<typename F>
     InlineFunction(F&& f) {
