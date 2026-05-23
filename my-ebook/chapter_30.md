@@ -423,7 +423,18 @@ class ViewModel : public PropertyMixin<ViewModel, std::string>,
 };
 ```
 
-Wait—this also fails because the base classes `PropertyMixin<ViewModel, std::string>` and `PropertyMixin<ViewModel, int>` are different types, so this actually works. The issue arises only when the template parameters are identical.
+This reveals a limitation: you cannot inherit from the same mixin type twice because it creates a diamond ambiguity. The solution is to differentiate the mixin instances using tag types:
+
+```cpp
+template<typename Tag, typename T>
+class PropertyMixin {
+    // ...
+};
+
+class ViewModel : public PropertyMixin<struct StringTag, std::string>,
+                  public PropertyMixin<struct IntTag, int> {
+    // Each instantiation is a different type, no ambiguity
+};
 
 ### Composition of Multiple CRTP Mixins
 
