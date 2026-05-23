@@ -1611,8 +1611,21 @@ public:
     bool operator!=(const PoolAllocator& other) const { return false; }
 
 private:
-    static thread_local typename std::aligned_storage<sizeof(T), alignof(T)>::type poolStorage_;
     struct Pool {
+        void* head_ = nullptr;
+        bool initialized_ = false;
+
+        void init(void* storage, size_t n) {
+            if (initialized_) return;
+            char* ptr = static_cast<char*>(storage);
+            for (size_t i = 0; i < n; ++i) {
+                void* slot = ptr + i * sizeof(T);
+                *static_cast<void**>(slot) = head_;
+                head_ = slot;
+            }
+            initialized_ = true;
+        }
+
         void* allocate() {
             if (head_) {
                 void* result = head_;
@@ -1625,17 +1638,17 @@ private:
             *static_cast<void**>(ptr) = head_;
             head_ = ptr;
         }
-        void* head_ = nullptr;
     };
     static Pool& getPool() {
         static Pool p;
+        p.init(&poolStorage_, N);
         return p;
     }
     Pool& pool_ = getPool();
 };
 
 template<typename T, size_t N>
-thread_local typename std::aligned_storage<sizeof(T), alignof(T)>::type
+thread_local typename std::aligned_storage<sizeof(T) * N, alignof(T)>::type
     PoolAllocator<T, N>::poolStorage_;
 
 // Usage:
