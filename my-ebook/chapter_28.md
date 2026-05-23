@@ -40,7 +40,7 @@ public:
     bool empty() const;
 
     void push_back(int value);
-    int pop_front();
+    void pop_front();
 
     using iterator = /* ... */;
     iterator begin();
