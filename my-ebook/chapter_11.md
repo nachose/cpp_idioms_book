@@ -172,8 +172,8 @@ auto makeCounter() {
 // Function creating a memorizing function
 template<typename Func>
 auto makeMemoized(Func&& func) {
-    std::map<typename std::invoke_result_t<Func, int>, int> cache;
-    return [func = std::forward<Func>(func), &cache](int arg) mutable {
+    using ResultType = std::invoke_result_t<Func, int>;
+    return [func = std::forward<Func>(func), cache = std::map<int, ResultType>{}] (int arg) mutable {
         if (cache.find(arg) == cache.end()) {
             cache[arg] = func(arg);
         }
