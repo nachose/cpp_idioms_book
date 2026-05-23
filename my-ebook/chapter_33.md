@@ -155,14 +155,14 @@ consteval {
         std::meta::members_of(enum_info);
 
     // generate a switch statement
-    std::string out = "std::string to_string(Color c) {\n  switch (c) {\n";
+    // generate a switch statement
+    std::string out = "std::string to_string(Color c) { switch (c) { ";
     for (auto e : enumerators) {
-        out += "    case " + std::string(std::meta::name_of(e)) + ": "
-             + "return \"" + std::string(std::meta::name_of(e)) + "\";\n";
+        out += "case " + std::string(std::meta::name_of(e)) + ": return \"" + std::string(std::meta::name_of(e)) + "\"; ";
     }
-    out += "  }\n  return \"(unknown)\";\n}";
-    // inject out as source code at compile time
-}
+    out += " } return \"(unknown)\"; }";
+    // splice the generated code into the program
+    [: out :];
 ```
 
 This code runs at compile time, producing the function body as a string, which is then spliced into the program. The `for` loop over `enumerators` is a `consteval` loop — it is evaluated entirely by the compiler, not by the final executable.
