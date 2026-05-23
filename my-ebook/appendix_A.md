@@ -129,7 +129,7 @@ A smaller revision focused on library improvements and language polish:
 - **`std::mdspan`**: multidimensional array view. Foundation for linear algebra in future standards.
 - **Stacktrace library**: `std::stacktrace` for debugging.
 - **`std::out_ptr` / `std::inout_ptr`**: adapting smart pointers to C-style output parameters.
-- **`multidimensional `operator[]`**: non-static `operator[]` can now accept multiple arguments, enabling `array[3, 5]` syntax.
+- **Multidimensional `operator[]`**: `operator[]` can now accept multiple arguments, enabling `array[3, 5]` syntax.
 - **`auto(x)` decayed copy**: explicit use of a prvalue copy.
 
 C++23's most significant idiomatic contribution is probably `std::expected`, which gave C++ a proper discriminated union for error handling, and deducing `this`, which provided a simpler alternative to CRTP.
