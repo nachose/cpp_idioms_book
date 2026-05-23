@@ -337,13 +337,13 @@ This is complex but enables writing generic adapters that automatically forward 
 
 The choice between CRTP (static) and virtual functions (dynamic) depends on your requirements:
 
-| Aspect | CRTP (Static) | Virtual (Dynamic) |
-|--------|---------------|-------------------|
-| Runtime cost | Zero (inlined) | Function pointer call |
-| Flexibility | Compile-time | Runtime |
-| Binary size | Larger (instantiations) | Smaller (shared vtable) |
-| Type changes | None possible | Via base pointers |
-| Compile time | Slower (instantiation) | Faster |
+| Aspect       | CRTP (Static)           | Virtual (Dynamic)       |
+| ------------ | ----------------------- | ----------------------- |
+| Runtime cost | Zero (inlined)          | Function pointer call   |
+| Flexibility  | Compile-time            | Runtime                 |
+| Binary size  | Larger (instantiations) | Smaller (shared vtable) |
+| Type changes | None possible           | Via base pointers       |
+| Compile time | Slower (instantiation)  | Faster                  |
 
 Use CRTP when performance is critical and types are known at compile time. Use virtual functions when you need runtime flexibility.
 
@@ -560,6 +560,7 @@ int computeStatic(const T& obj, int x) {
 ```
 
 In benchmark tests, static dispatch typically shows:
+
 - No function pointer indirection
 - Better instruction cache behavior
 - More opportunities for compiler optimization
@@ -1059,12 +1060,12 @@ Each mixin adds a capability. The final class has all capabilities without expli
 
 Mixins offer advantages over traditional inheritance:
 
-| Aspect | Traditional | Mixins |
-|--------|-------------|--------|
-| Composition | Single inheritance limited | Multiple, stackable |
-| Flexibility | At runtime | At compile time |
-| State | Single path | Independent paths |
-| Conflicts | Resolved by overriding | Must manage explicitly |
+| Aspect      | Traditional                | Mixins                 |
+| ----------- | -------------------------- | ---------------------- |
+| Composition | Single inheritance limited | Multiple, stackable    |
+| Flexibility | At runtime                 | At compile time        |
+| State       | Single path                | Independent paths      |
+| Conflicts   | Resolved by overriding     | Must manage explicitly |
 
 Mixins compose at compile time, enabling more flexible class building. Traditional inheritance defines a fixed hierarchy at compile time.
 
@@ -1453,21 +1454,23 @@ The weak pointer tracks the object without preventing its deletion.
 
 The Counted Idiom offers advantages in certain scenarios:
 
-| Aspect | Counted Idiom | std::shared_ptr |
-|--------|---------------|-----------------|
-| Memory overhead | Just the count (typically 4 bytes) | Control block (2 pointers + count) |
-| Allocation | Intrusive - no separate allocation | Separate allocation for control block |
-| Flexibility | Requires explicit support in object | Works with any type |
-| Thread safety | Must be implemented manually | Built-in |
-| Custom deleters | Intrinsic to the object | Configurable |
+| Aspect          | Counted Idiom                       | std::shared_ptr                       |
+| --------------- | ----------------------------------- | ------------------------------------- |
+| Memory overhead | Just the count (typically 4 bytes)  | Control block (2 pointers + count)    |
+| Allocation      | Intrusive - no separate allocation  | Separate allocation for control block |
+| Flexibility     | Requires explicit support in object | Works with any type                   |
+| Thread safety   | Must be implemented manually        | Built-in                              |
+| Custom deleters | Intrinsic to the object             | Configurable                          |
 
 Use the Counted Idiom when:
+
 - You control the object type and can add reference counting
 - Memory overhead is critical
 - You need maximum performance
 - The pattern is consistently used in your codebase
 
 Use `std::shared_ptr` when:
+
 - You can't modify the object type
 - You need custom deleters
 - Thread safety is required
@@ -1612,16 +1615,6 @@ RefPtr<SharedData> createData(int value) {
 ```
 
 This complete implementation provides move semantics, thread-safe reference counting, and a clear separation of concerns.
-
-### Summary
-
-The Counted Idiom provides efficient shared ownership by storing reference counts within the objects themselves. Intrusive reference counting avoids separate control block allocation. CRTP enables clean implementation with zero virtual overhead. Thread safety requires atomic operations. Copy-on-write patterns leverage the counted idiom for efficient modification. Weak references track objects without owning them. While `std::shared_ptr` is more flexible, the Counted Idiom offers lower overhead and is essential in performance-critical code and systems like COM.
-
-This chapter explored static polymorphism techniques in C++—from CRTP as the foundational pattern, through static dispatch without virtual functions, to mixin-based composition and reference counting. These techniques enable zero-cost abstractions while maintaining polymorphic behavior, essential for high-performance systems programming.
-
-This chapter explored static polymorphism techniques in C++—from CRTP as the foundational pattern, through static dispatch without virtual functions, to mixin-based composition and reference counting. These techniques enable zero-cost abstractions while maintaining polymorphic behavior, essential for high-performance systems programming.
-
----
 
 ## Summary
 
