@@ -115,8 +115,8 @@ public:
     }
 
 private:
-    virtual void drawImpl() const = 0;
-    virtual double areaImpl() const = 0;
+    // In static polymorphism, base classes do not declare virtual functions.
+    // Derived classes are expected to implement drawImpl() and areaImpl().
 };
 
 class Circle : public Shape<Circle> {
