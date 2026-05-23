@@ -297,9 +297,8 @@ public:
     template<typename F>
     auto and_then(F&& f) const -> IO<decltype(f(std::declval<T>()).run())> {
         return IO<decltype(f(std::declval<T>()).run())>(
-            [this, &f]() {
-                T result = this->run();
-                return f(result).run();
+            [action = this->action, f = std::forward<F>(f)]() {
+                return f(action()).run();
             }
         );
     }
