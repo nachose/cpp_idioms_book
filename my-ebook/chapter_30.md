@@ -637,7 +637,7 @@ public:
 
 private:
     uint64_t id_ = nextId_++;
-    static uint64_t nextId_;
+    static std::atomic<uint64_t> nextId_;
 };
 
 class Player : public EntityBase<Player> {
