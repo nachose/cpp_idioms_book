@@ -128,10 +128,11 @@ public:
         return handle_.done();
     }
 
-    void await_suspend(std::coroutine_handle<> awaiting_handle) noexcept {
+    bool await_suspend(std::coroutine_handle<> awaiting_handle) noexcept {
         // Store the awaiting coroutine's handle in the promise.
-        // When this task completes, final_suspend will resume it.
         handle_.promise().continuation_ = awaiting_handle;
+        // If the task is already done, don't suspend.
+        return !handle_.done();
     }
 
     T await_resume() {
