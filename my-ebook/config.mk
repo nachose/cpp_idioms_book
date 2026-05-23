@@ -34,4 +34,7 @@ CHAPTERS := \
     chapter_30.md \
     chapter_31.md \
     chapter_32.md \
-    chapter_33.md
+    chapter_33.md \
+    appendix_A.md \
+    appendix_B.md \
+    appendix_C.md    
