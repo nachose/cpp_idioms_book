@@ -41,11 +41,7 @@ A pack becomes useful only when it is _expanded_. Expansion is triggered by plac
 ```cpp
 template <typename... Ts>
 void print_all(Ts... args) {        // function parameter pack
-    (std::cout << ... << args);     // fold expression, C++17
-}
-```
-
-The line `(std::cout << ... << args)` is a _unary right fold_. It expands to `((std::cout << arg1) << arg2) << arg3 ...`, printing each argument in order. Fold expressions (C++17) are the idiomatic way to operate on packs in value contexts; before C++17, recursion was the only option.
+The line `(std::cout << ... << args)` is a _binary left fold_. It expands to `((std::cout << arg1) << arg2) << arg3 ...`, printing each argument in order. Fold expressions (C++17) are the idiomatic way to operate on packs in value contexts; before C++17, recursion was the only option.
 
 The pattern can be arbitrarily complex:
 
