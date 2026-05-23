@@ -739,7 +739,7 @@ The decision tables below group idioms by the problem they solve.
 | Clarify constructor intent | Named constructor | C++11 |
 | Copy through base pointer | Virtual clone | C++11 |
 | Object creation by type registry | Factory method | C++11 |
-| Related object families | Abstract factory | C++11 |
+| Related object families | Abstract factory | C++14 |
 | One instance only | Singleton | C++11 |
 | Share immutable state | Flyweight | C++11 |
 
