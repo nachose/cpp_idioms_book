@@ -45,7 +45,7 @@ class Socket {
 };
 ```
 
-Get/set accessors are named `getFieldName()` / `setFieldName()` when they perform non-trivial work. For trivial member access, prefer the member name directly (`socket.fd`) or a named accessor without `get` (`socket.fileDescriptor()`).
+Get/set accessors are named getFieldName() / setFieldName() when they perform non-trivial work. For trivial member access, prefer a named accessor without get (socket.fileDescriptor()).
 
 ### Variables and parameters
 
