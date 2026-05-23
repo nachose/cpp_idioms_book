@@ -468,7 +468,7 @@ struct input_iterator_tag {};
 struct forward_iterator_tag       : input_iterator_tag {};
 struct bidirectional_iterator_tag : forward_iterator_tag {};
 struct random_access_iterator_tag : bidirectional_iterator_tag {};
-struct contiguous_iterator_tag    : random_access_iterator_tag {};  // C++17
+struct contiguous_iterator_tag    : random_access_iterator_tag {};  // C++20
 ```
 
 - **Input iterators**: read once, forward only (`std::istream_iterator`).
