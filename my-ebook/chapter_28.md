@@ -1287,7 +1287,7 @@ public:
     const char* name() const noexcept override { return "file"; }
     std::string message(int ev) const override {
         switch (static_cast<FileError>(ev)) {
-        case FileError::NotFOund:       return "file not found";
+        case FileError::NotFound:       return "file not found";
         case FileError::PermissionDenied: return "permission denied";
         case FileError::Corrupted:      return "file corrupted";
         default:                        return "unknown file error";
