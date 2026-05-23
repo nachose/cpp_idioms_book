@@ -349,34 +349,44 @@ class TaskScope {
     std::atomic<int> remaining_{0};
     std::coroutine_handle<> waiter_;
     std::exception_ptr error_;
+    std::mutex error_mutex_;
 
 public:
-    // Spawn a fire-and-forget child, but track its completion.
+    ~TaskScope() {
+        // In a real system, you might want to assert that remaining_ == 0
+        // or provide a mechanism to cancel pending tasks.
+    }
+
     template <typename T>
     void spawn(Task<T> task) {
         remaining_.fetch_add(1, std::memory_order_relaxed);
-        // Launch the task. On completion, decrement counter.
         auto child = [this, task = std::move(task)]() -> FireForget {
             try {
                 co_await task;
             } catch (...) {
+                std::lock_guard<std::mutex> lock(error_mutex_);
                 if (!error_) error_ = std::current_exception();
             }
             if (remaining_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
-                // This was the last task; resume the waiter.
-                if (waiter_) waiter_.resume();
+                std::coroutine_handle<> h;
+                // Atomically check if a waiter was set.
+                if (waiter_) h = waiter_;
+                if (h) h.resume();
             }
         };
         child();
     }
 
-    // Awaiter that suspends until all spawned tasks complete.
     bool await_ready() noexcept {
         return remaining_.load(std::memory_order_acquire) == 0;
     }
 
     void await_suspend(std::coroutine_handle<> handle) noexcept {
         waiter_ = handle;
+        // Re-check count after setting waiter to avoid lost wake-up.
+        if (remaining_.load(std::memory_order_acquire) == 0) {
+            handle.resume();
+        }
     }
 
     void await_resume() {
