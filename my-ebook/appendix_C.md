@@ -277,7 +277,7 @@ namespace mylib::compression {
 } // namespace mylib::compression
 ```
 
-C++17 inline namespaces (`namespace inline v1 { ... }`) are reserved for ABI compatibility boundaries.
+C++17 inline namespaces (inline namespace v1 { ... }) are reserved for ABI compatibility boundaries.
 
 ### Access level ordering
 
