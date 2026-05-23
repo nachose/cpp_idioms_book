@@ -110,7 +110,12 @@ public:
 // Actor base class
 class Actor {
 public:
-    virtual ~Actor() = default;
+    virtual ~Actor() {
+        stop();
+    }
+    
+    // Send a message to this actor (thread-safe)
+    void send(std::unique_ptr<Message> msg) {
     
     // Send a message to this actor (thread-safe)
     void send(std::unique_ptr<Message> msg) {
