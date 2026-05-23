@@ -60,14 +60,18 @@ public:
         : alloc_(alloc) {}
 
     void reserve(size_t n) {
-        // Use traits for allocation, not alloc_.allocate() directly.
+        if (n <= capacity_) return;
         auto new_data = traits::allocate(alloc_, n);
-        // Move existing elements to new_data ...
+        for (size_t i = 0; i < size_; ++i) {
+            traits::construct(alloc_, new_data + i, std::move(data_[(head_ + i) % capacity_]));
+            traits::destroy(alloc_, data_ + (head_ + i) % capacity_);
+        }
         if (data_) {
             traits::deallocate(alloc_, data_, capacity_);
         }
         data_ = new_data;
         capacity_ = n;
+        head_ = 0;
     }
 
     void push_back(const T& value) {
