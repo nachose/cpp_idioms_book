@@ -602,10 +602,10 @@ auto multiply(Ts... args) {
 Recursive pack processing instantiates a chain of function templates, one per element. Fold expressions produce a single expression tree that the compiler optimizes as a unit. For a pack of N elements:
 
 | Aspect                  | Recursive                     | Fold expression             |
-| ----------------------- | ----------------------------- | --------------------------- | --- | ------- |
+| ----------------------- | ----------------------------- | --------------------------- |
 | Template instantiations | N+1 function templates        | 1 function template         |
 | Binary size             | N copies of similar code      | 1 optimized expression      |
-| Short-circuiting        | No (all instantiations exist) | Yes (for `&&`, `            |     | `, `,`) |
+| Short-circuiting        | No (all instantiations exist) | Yes (for `&&`, `||`, `,`)   |
 | Empty pack handling     | Separate overload             | Binary fold with init value |
 | Readability             | Verbose, error-prone          | Concise, declarative        |
 | Compilation speed       | Slower (more instantiations)  | Faster                      |
