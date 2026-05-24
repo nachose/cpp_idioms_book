@@ -1,10 +1,5 @@
 # Chapter 22: Creational Patterns
 
-- Builder pattern with method chaining
-- Singleton implementations and alternatives
-- Abstract Factory with type lists
-- Object pool patterns
-
 ## Builder Pattern with Method Chaining
 
 Constructing complex objects is a deceptively hard problem. When an object requires many parameters — some required, some optional, some interdependent — constructor calls become unreadable, error-prone, and brittle. A `Widget` that needs a width, height, color, label, border radius, font size, and callback handler cannot express all of these clearly through positional constructor arguments. Worse, adding a new parameter later breaks every call site.
