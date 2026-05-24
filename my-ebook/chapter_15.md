@@ -269,7 +269,9 @@ void example(F&& f, auto&&... args) {
 
 These traits are essential for writing generic wrappers that must forward calls while preserving type safety. A logging wrapper, for example, can inspect the invocable's signature at compile time and produce a static error if the arguments do not match.
 
-### The \_v helper aliases
+### `_v` helper aliases
+
+Every standard trait that provides a `::value` member has a corresponding `_v` alias template (C++17 and later):
 
 Every standard trait that provides a `::value` member has a corresponding `_v` alias template (C++14 and later):
 
