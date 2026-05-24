@@ -108,11 +108,11 @@ public:
 };
 ```
 
-This is workable but verbose. In practice most C++ builders use a runtime check in `build()` that throws or returns an error if a required parameter was omitted. The C++ type system *can* enforce completeness, but the resulting complexity is rarely worth it for all but the most critical APIs.
+This is workable but verbose. In practice most C++ builders use a runtime check in `build()` that throws or returns an error if a required parameter was omitted. The C++ type system _can_ enforce completeness, but the resulting complexity is rarely worth it for all but the most critical APIs.
 
 ### In-Place Builder (Fluent Construction)
 
-A variation that is popular in the C++ standard library and in high-performance code makes the *target object itself* the builder:
+A variation that is popular in the C++ standard library and in high-performance code makes the _target object itself_ the builder:
 
 ```cpp
 class Widget {
@@ -237,7 +237,7 @@ The builder pattern is overkill for simple objects with three or four constructo
 
 The Singleton is one of the most controversial patterns in the Gang of Four catalog — widely used and widely reviled in equal measure. Its intent is straightforward: ensure a class has exactly one instance and provide a global point of access to it. In C++, the implementation choices reveal a spectrum of trade-offs between thread safety, initialization cost, lifetime control, and testability.
 
-The core problem the Singleton solves is different from what many assume. It is not about "one instance" — it is about *coordinated access* to a shared resource. A logger, a configuration registry, a hardware driver, or a global clock all need a single point of coordination so that different parts of the program see a consistent view. The Singleton is one way to enforce that coordination, but it is rarely the best way in modern C++.
+The core problem the Singleton solves is different from what many assume. It is not about "one instance" — it is about _coordinated access_ to a shared resource. A logger, a configuration registry, a hardware driver, or a global clock all need a single point of coordination so that different parts of the program see a consistent view. The Singleton is one way to enforce that coordination, but it is rarely the best way in modern C++.
 
 ### Meyer's Singleton
 
@@ -272,7 +272,7 @@ This is the recommended Singleton in C++ unless you need fine-grained control ov
 
 ### The Destruction Problem
 
-A function-local `static` is destroyed during the static destruction phase, after `main()` returns. If another global object's destructor calls `Logger::instance()` after the Logger has been destroyed, the program crashes. This is the *static destruction order fiasco*.
+A function-local `static` is destroyed during the static destruction phase, after `main()` returns. If another global object's destructor calls `Logger::instance()` after the Logger has been destroyed, the program crashes. This is the _static destruction order fiasco_.
 
 ```cpp
 struct Config {
@@ -287,6 +287,7 @@ Config global_config;  // Destroyed after Logger because it was constructed befo
 The problem arises because C++ destroys static objects in reverse order of construction, and the construction order across translation units is undefined. A Logger constructed on first use (late) may be destroyed before an object constructed earlier (and thus destroyed later, since destruction is reverse order).
 
 Solutions:
+
 1. **Do not call Singletons from destructors of other globals** — the simplest rule but hard to enforce.
 2. **Use a two-phase Singleton** with an explicit `shutdown()` function that destroys the instance before the static destruction phase, ensuring a predictable order.
 3. **Use a `std::shared_ptr`-based Singleton with a custom lifetime** that can be reset explicitly.
@@ -566,7 +567,7 @@ Every new product type — `Menu`, `Toolbar`, `Dialog` — requires adding a vir
 
 ### The Type List Approach
 
-A type list is a compile-time sequence of types. The idea, popularized by Andrei Alexandrescu in *Modern C++ Design*, is to encode the product types as a type list and generate the abstract factory interface — and its concrete implementations — automatically through templates, eliminating the repetitive virtual function declarations.
+A type list is a compile-time sequence of types. The idea, popularized by Andrei Alexandrescu in _Modern C++ Design_, is to encode the product types as a type list and generate the abstract factory interface — and its concrete implementations — automatically through templates, eliminating the repetitive virtual function declarations.
 
 In traditional C++03 style, a type list is a recursive data structure:
 
@@ -755,12 +756,14 @@ The type-list Abstract Factory trades off:
 ### When to Use
 
 The type-list Abstract Factory is most valuable when:
+
 - The product family is fixed and known at compile time.
 - The number of products is large enough that manual virtual function declarations become tedious (typically 5+ products).
 - Multiple concrete factories exist for different configurations or platforms.
 - The product types are added or removed in lockstep across all factories.
 
 It is not a good fit when:
+
 - The product family changes frequently and the compile-edit-debug cycle for template-heavy code is too slow.
 - The team is not comfortable with variadic templates and multiple inheritance from template bases.
 - Products need to be registered dynamically (e.g., loaded from plugins at runtime).
@@ -980,42 +983,6 @@ class LockFreePool {
         std::atomic<Slot*> next_free;
     };
 
-    std::vector<Slot> slots_;
-    std::atomic<Slot*> head_;
-
-public:
-    T* acquire() {
-        Slot* old_head = head_.load(std::memory_order_acquire);
-        Slot* new_head;
-        do {
-            if (!old_head) return nullptr;
-            new_head = old_head->next_free.load(std::memory_order_relaxed);
-        } while (!head_.compare_exchange_weak(old_head, new_head,
-                 std::memory_order_acq_rel, std::memory_order_acquire));
-        return &old_head->object;
-    }
-
-    void release(T* obj) {
-        Slot* slot = reinterpret_cast<Slot*>(obj);
-        slot->object.~T();
-        new (&slot->object) T();
-
-        Slot* old_head = head_.load(std::memory_order_acquire);
-        do {
-            slot->next_free.store(old_head, std::memory_order_relaxed);
-        } while (!head_.compare_exchange_weak(old_head, slot,
-                 std::memory_order_acq_rel, std::memory_order_acquire));
-    }
-};
-```
-
-template <typename T>
-class LockFreePool {
-    struct Slot {
-        T object;
-        std::atomic<Slot*> next_free;
-    };
-
     struct TaggedPointer {
         Slot* ptr;
         uintptr_t tag;
@@ -1052,6 +1019,7 @@ public:
                  std::memory_order_acq_rel, std::memory_order_acquire));
     }
 };
+```
 
 Lock-free pools can outperform mutex-based pools under high contention, but they require careful memory ordering and thorough testing on the target architecture. For most applications, the mutex-based pool — or a per-thread pool (see below) — is the safer choice.
 
@@ -1250,18 +1218,21 @@ The `Poolable<T>` mixin provides static `create()` and `destroy()` methods that 
 Object pooling is an optimization, and all optimization rules apply: measure first.
 
 Pooling is beneficial when:
+
 - Objects are allocated and freed at very high frequency (thousands per second).
 - Each object's construction or destruction is expensive (e.g., opening a database connection, allocating a large buffer).
 - Allocation latency must be predictable and low (real-time audio, game loops, trading systems).
 - Memory fragmentation from many small allocations is a concern (long-running servers).
 
 Pooling is unnecessary or harmful when:
+
 - Objects are long-lived and allocated infrequently — a pool just wastes memory.
 - The maximum number of simultaneous objects is small and unpredictable — the pool either over-allocates (wasting memory) or under-allocates (causing fallback to the heap anyway).
 - Objects have variable size or type — a generic pool either wastes space (allocating for the largest type) or requires complex fragmentation management.
 - The memory footprint of the application is already a constraint — pools reserve memory that other parts of the system could use.
 
 Even when pooling is appropriate, consider whether a simpler alternative suffices:
+
 - **Stack allocation** — if objects are used in a LIFO pattern, a stack-based allocator is faster than a pool.
 - **`std::vector` reuse** — instead of pooling individual elements, resize and clear a vector of objects.
 - **`std::pmr::monotonic_buffer_resource`** — the polymorphic memory resource (C++17) provides a fast bump-allocator that can replace pooling for short-lived objects.
