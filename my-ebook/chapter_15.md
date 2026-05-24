@@ -269,12 +269,13 @@ void example(F&& f, auto&&... args) {
 
 These traits are essential for writing generic wrappers that must forward calls while preserving type safety. A logging wrapper, for example, can inspect the invocable's signature at compile time and produce a static error if the arguments do not match.
 
-### The _v helper aliases
+### The \_v helper aliases
 
 Every standard trait that provides a `::value` member has a corresponding `_v` alias template (C++14 and later):
 
 ```cpp
-template <typename T>\ninline constexpr bool is_integral_v = std::is_integral<T>::value;
+template <typename T>
+inline constexpr bool is_integral_v = std::is_integral<T>::value;
 ```
 
 The `_v` suffix may seem trivial, but it significantly improves readability. Compare:
@@ -581,14 +582,14 @@ This is dramatically simpler than any specialization strategy. The compiler disc
 
 The decision tree for selecting a specialization strategy follows the nature of what needs to change:
 
-| Goal | Strategy |
-|---|---|
-| Change return type or behavior per type | `if constexpr` (C++17) |
-| Add/remove members per type | Class template partial specialization |
-| Select function overload per category | Tag dispatch |
-| Hide implementation details from users | Helper class with full specialization |
-| Conditionally enable/disable an overload | `enable_if` / concepts |
-| Customize behavior for user-defined types | Traits class specialization |
+| Goal                                      | Strategy                              |
+| ----------------------------------------- | ------------------------------------- |
+| Change return type or behavior per type   | `if constexpr` (C++17)                |
+| Add/remove members per type               | Class template partial specialization |
+| Select function overload per category     | Tag dispatch                          |
+| Hide implementation details from users    | Helper class with full specialization |
+| Conditionally enable/disable an overload  | `enable_if` / concepts                |
+| Customize behavior for user-defined types | Traits class specialization           |
 
 `if constexpr` should be the first consideration because it is the simplest and most readable. Partial specialization should be used when the type's structure must change. Tag dispatch should be used when working with function templates in pre-C++17 code or when the dispatch criteria are complex. Full specialization of function templates should be avoided in favor of any of the alternatives.
 
@@ -608,7 +609,7 @@ The broader trade-off is between compile-time selection and runtime selection. T
 
 ## Template Argument Deduction
 
-Template argument deduction is the mechanism by which the compiler determines the template parameters of a function or class template from the types of its arguments — without the programmer explicitly writing them. It is the engine behind almost every convenient C++ feature: `auto`, `std::make_unique`, range-for, generic lambdas, and CTAD (Class Template Argument Deduction). Understanding its rules is essential because it determines what a template *sees*, and therefore how it behaves.
+Template argument deduction is the mechanism by which the compiler determines the template parameters of a function or class template from the types of its arguments — without the programmer explicitly writing them. It is the engine behind almost every convenient C++ feature: `auto`, `std::make_unique`, range-for, generic lambdas, and CTAD (Class Template Argument Deduction). Understanding its rules is essential because it determines what a template _sees_, and therefore how it behaves.
 
 ### How deduction works: the compiler's view
 
@@ -659,11 +660,11 @@ When the argument is an lvalue of type `A`, `T` deduces to `A&`. When the argume
 Reference collapsing is the set of four rules that determine what happens when a reference to a reference appears:
 
 | Original type | Collapsed to |
-|---------------|-------------|
-| `T& &`  | `T&`  |
-| `T& &&` | `T&`  |
-| `T&& &` | `T&`  |
-| `T&& &&`| `T&&` |
+| ------------- | ------------ |
+| `T& &`        | `T&`         |
+| `T& &&`       | `T&`         |
+| `T&& &`       | `T&`         |
+| `T&& &&`      | `T&&`        |
 
 The rule is simple: if either reference is an lvalue reference, the result is an lvalue reference. Only when both are rvalue references does the result remain an rvalue reference.
 
@@ -675,7 +676,7 @@ for (auto&& element : container) {
 }
 ```
 
-The forwarding reference pattern, combined with `std::forward`, produces what is called *perfect forwarding* — the ability to forward an argument's value category unchanged:
+The forwarding reference pattern, combined with `std::forward`, produces what is called _perfect forwarding_ — the ability to forward an argument's value category unchanged:
 
 ```cpp
 template <typename T>
@@ -751,7 +752,7 @@ void inspect(T arg) {
 
 ### Non-deduced contexts
 
-Certain positions in a template parameter are *non-deduced*: the compiler will not attempt to deduce `T` from them, and the template argument must be provided explicitly or taken from a default. The most common non-deduced contexts are:
+Certain positions in a template parameter are _non-deduced_: the compiler will not attempt to deduce `T` from them, and the template argument must be provided explicitly or taken from a default. The most common non-deduced contexts are:
 
 **The left side of `::`**
 
@@ -769,7 +770,7 @@ template <typename T>
 void g(std::vector<T> arg);  // T is deduced from the vector element type
 ```
 
-This *is* a deduced context — `T` is not nested inside `std::vector` as a non-deduced position; it is a template argument of `std::vector`. The compiler can deduce `T` from `std::vector<int>` in the argument. But:
+This _is_ a deduced context — `T` is not nested inside `std::vector` as a non-deduced position; it is a template argument of `std::vector`. The compiler can deduce `T` from `std::vector<int>` in the argument. But:
 
 ```cpp
 template <typename T>
@@ -817,7 +818,7 @@ Box b(42);       // Box<int>, CTAD deduces T = int
 Box b2(3.14);    // Box<double>, CTAD deduces T = double
 ```
 
-CTAD works through *implicit deduction guides*: for each constructor of the class template, the compiler generates a synthetic function template that mirrors the constructor's signature and deduces the template parameters. The standard library examples include `std::pair`, `std::tuple`, and `std::optional`:
+CTAD works through _implicit deduction guides_: for each constructor of the class template, the compiler generates a synthetic function template that mirrors the constructor's signature and deduces the template parameters. The standard library examples include `std::pair`, `std::tuple`, and `std::optional`:
 
 ```cpp
 std::pair p(1, 2.0);                  // std::pair<int, double>
@@ -859,7 +860,7 @@ public:
 // Wrapper w(42);  // Error: T is non-deduced
 ```
 
-CTAD also fails for aggregates before C++20. In C++17, aggregate types with user-provided constructors were needed for CTAD. C++20 added *aggregate CTAD*:
+CTAD also fails for aggregates before C++20. In C++17, aggregate types with user-provided constructors were needed for CTAD. C++20 added _aggregate CTAD_:
 
 ```cpp
 template <typename T>

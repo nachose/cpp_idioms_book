@@ -2,39 +2,53 @@ BOOK := cpp_idioms
 
 CHAPTERS := \
     001-preface.md \
+    Part_I.md \
     chapter_01.md \
     chapter_02.md \
+    Part_II.md \
     chapter_03.md \
     chapter_04.md \
     chapter_05.md \
+    Part_III.md \
     chapter_06.md \
     chapter_07.md \
+    Part_IV.md \
     chapter_08.md \
     chapter_09.md \
     chapter_10.md \
+    Part_V.md \
     chapter_11.md \
     chapter_12.md \
+    Part_VI.md \
     chapter_13.md \
     chapter_14.md \
+    Part_VII.md \
     chapter_15.md \
     chapter_16.md \
     chapter_17.md \
+    Part_VIII.md \
     chapter_18.md \
     chapter_19.md \
+    Part_IX.md \
     chapter_20.md \
     chapter_21.md \
+    Part_X.md \
     chapter_22.md \
     chapter_23.md \
     chapter_24.md \
+    Part_XI.md \
     chapter_25.md \
     chapter_26.md \
     chapter_27.md \
+    Part_XII.md \
     chapter_28.md \
     chapter_29.md \
+    Part_XIII.md \
     chapter_30.md \
     chapter_31.md \
     chapter_32.md \
     chapter_33.md \
+    Part_XIV.md \
     appendix_A.md \
     appendix_B.md \
     appendix_C.md    
