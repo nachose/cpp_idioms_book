@@ -26,8 +26,8 @@ PRETTY_STAMP = .formatted
 
 # The stamp file depends on the markdown files
 $(PRETTY_STAMP): $(CHAPTERS)
-	prettier --parser markdown --embedded-language-formatting off --write *.md \
-	&& sed -i '/<!-- prettier-ignore -->/d' *.md
+	prettier --parser markdown --embedded-language-formatting off --write $(CHAPTERS) \
+	&& sed -i '/<!-- prettier-ignore -->/d' $(CHAPTERS)
 	touch $(PRETTY_STAMP)
 
 generate_mermaid_images:
