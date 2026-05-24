@@ -164,6 +164,7 @@ constexpr unsigned long long factorial(unsigned int n) {
 This version is simpler to write, easier to read, produces better compiler diagnostics, and is not subject to template recursion depth limits. It should be preferred for any computation that involves only values.
 
 Template recursion remains necessary when:
+
 1. **The result is a type**, not a value. `constexpr` functions return values, not types.
 2. **The computation must produce a type alias**, such as finding the type at an index in a parameter pack.
 3. **The computation involves template template parameters** that depend on recursive instantiation.
@@ -311,6 +312,7 @@ void print(const T& first, const Rest&... rest) {
 ```
 
 This technique works but has notable drawbacks:
+
 - It requires a zero-argument overload for the base case
 - Each recursion level is a separate function template instantiation, increasing compilation time
 - The base case must be visible at the point of the recursive call, which can cause ordering issues
@@ -377,6 +379,7 @@ Unlike template recursion, `sizeof...` incurs no additional instantiation cost. 
 Pack expansion is a compile-time operation with no runtime cost, but it has several constraints:
 
 - **Order of evaluation**: In an initializer list, pack elements are evaluated left-to-right. In a function call, the order is unspecified. This matters when expansions have side effects:
+
   ```cpp
   // Left-to-right guaranteed in initializer list
   int dummy[] = { f(args)... };  // f(arg1), then f(arg2), then ...
@@ -598,14 +601,14 @@ auto multiply(Ts... args) {
 
 Recursive pack processing instantiates a chain of function templates, one per element. Fold expressions produce a single expression tree that the compiler optimizes as a unit. For a pack of N elements:
 
-| Aspect | Recursive | Fold expression |
-|---|---|---|
-| Template instantiations | N+1 function templates | 1 function template |
-| Binary size | N copies of similar code | 1 optimized expression |
-| Short-circuiting | No (all instantiations exist) | Yes (for `&&`, `||`, `,`) |
-| Empty pack handling | Separate overload | Binary fold with init value |
-| Readability | Verbose, error-prone | Concise, declarative |
-| Compilation speed | Slower (more instantiations) | Faster |
+| Aspect                  | Recursive                     | Fold expression             |
+| ----------------------- | ----------------------------- | --------------------------- |
+| Template instantiations | N+1 function templates        | 1 function template         |
+| Binary size             | N copies of similar code      | 1 optimized expression      |
+| Short-circuiting        | No (all instantiations exist) | Yes (for `&&`, `||`, `,`)   |
+| Empty pack handling     | Separate overload             | Binary fold with init value |
+| Readability             | Verbose, error-prone          | Concise, declarative        |
+| Compilation speed       | Slower (more instantiations)  | Faster                      |
 
 Fold expressions are unambiguously superior in every dimension and should be the default choice for any operation that can be expressed as a reduction.
 
@@ -880,5 +883,3 @@ The `requires` expression inside `if constexpr` checks whether a particular expr
 The best practice is to start with static assertions during development, because they are simple and produce clear errors. As the template matures and its requirements stabilize, convert the preconditions into concepts. This migration path—from static assertions to concepts—ensures that the constraints are well-understood before they are formalized, and that the concept definitions capture the actual requirements rather than imagined ones.
 
 ---
-
-*End of Chapter 16*

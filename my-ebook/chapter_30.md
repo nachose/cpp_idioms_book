@@ -147,7 +147,7 @@ Another design consideration is initialization order. Multiple inheritance follo
 class InitializationOrderMixin {
 public:
     InitializationOrderMixin() {
-        // At this point, only bases declared to the left 
+        // At this point, only bases declared to the left
         // have been initialized — right-side bases haven't.
     }
 };
@@ -435,6 +435,7 @@ class ViewModel : public PropertyMixin<struct StringTag, std::string>,
                   public PropertyMixin<struct IntTag, int> {
     // Each instantiation is a different type, no ambiguity
 };
+```
 
 ### Composition of Multiple CRTP Mixins
 

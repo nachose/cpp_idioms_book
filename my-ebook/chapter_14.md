@@ -23,16 +23,19 @@ Double-checked locking is an optimization pattern used to reduce the overhead of
 The classic problem double-checked locking aims to solve is the initialization of a singleton or other shared resource that is expensive to create but needed infrequently. A naive approach would use a mutex every time the resource is accessed, causing unnecessary overhead after initialization. Double-checked locking attempts to avoid this overhead by checking the initialization status twice: once without locking, and if that check suggests initialization is needed, then with locking to ensure thread safety.
 
 However, double-checked locking is notoriously difficult to implement correctly in C++ due to the complexities of memory ordering and compiler optimizations. Without proper memory barriers, several issues can arise:
+
 1. **Compiler reordering**: The compiler might reorder instructions such that the pointer to the resource becomes visible before the resource is fully constructed
 2. **CPU reordering**: Even if the compiler doesn't reorder, the CPU might execute memory operations out of order for performance
 3. **Cache coherence issues**: In multi-core systems, changes made by one thread might not be immediately visible to others
 
 The key to making double-checked locking work correctly in C++ is using `std::atomic` with appropriate memory ordering specifications. The pattern typically involves:
+
 1. An atomic pointer or flag to track initialization status
 2. Memory acquire/release semantics to ensure proper visibility
 3. A mutex to protect the actual initialization when needed
 
 Consider this corrected implementation:
+
 ```cpp
 class Singleton {
 public:
@@ -48,13 +51,13 @@ public:
         }
         return *tmp;
     }
-    
+
 private:
     Singleton() = default;
     ~Singleton() = default;
     Singleton(const Singleton&) = delete;
     Singleton& operator=(const Singleton&) = delete;
-    
+
     static std::atomic<Singleton*> instance_ptr;
     static std::mutex mutex_;
 };
@@ -63,11 +66,13 @@ private:
 The double-checked locking pattern has evolved with C++ standards. In C++11 and later, the language provides stronger guarantees about atomic operations and memory ordering, making the pattern safer to implement. However, even with these improvements, developers must still understand the underlying memory model to use it correctly.
 
 Alternatives to double-checked locking often provide safer and simpler solutions:
+
 1. **Meyers' Singleton**: Using a local static variable (guaranteed thread-safe initialization in C++11+)
 2. **std::call_once**: Specifically designed for one-time initialization
 3. **Eager initialization**: Creating the resource at program startup when performance isn't critical
 
 Despite its complexity, understanding double-checked locking is valuable because it teaches important concepts about concurrent programming:
+
 - The importance of memory ordering in multi-threaded environments
 - How compiler and CPU optimizations can affect correctness
 - The distinction between atomic operations and synchronization primitives
@@ -80,6 +85,7 @@ In practice, double-checked locking should be reserved for performance-critical 
 The Actor model is a conceptual framework for concurrent computation that treats "actors" as the fundamental units of computation. In this model, actors communicate exclusively through asynchronous message passing, eliminating the need for explicit locking mechanisms and reducing the risk of common concurrency issues like deadlocks and race conditions.
 
 At its core, the Actor model is based on three principles:
+
 1. **Encapsulation**: Each actor encapsulates its own state and behavior
 2. **Isolation**: Actors do not share state; they communicate only through messages
 3. **Message-driven computation**: Actors react to incoming messages by updating their state, sending messages to other actors, or creating new actors
@@ -87,6 +93,7 @@ At its core, the Actor model is based on three principles:
 This model naturally fits concurrent and distributed systems because it avoids the complexities of shared-memory synchronization. Since actors don't share memory, there's no need for locks, semaphores, or other synchronization primitives when accessing actor state. Instead, all coordination happens through the message passing mechanism.
 
 In C++, implementing the Actor model requires careful consideration of several key components:
+
 - **Message passing mechanism**: How actors send and receive messages
 - **Actor lifecycle management**: How actors are created, started, and terminated
 - **Mailbox implementation**: How messages are queued for each actor
@@ -94,12 +101,14 @@ In C++, implementing the Actor model requires careful consideration of several k
 - **Location transparency**: Whether the system supports distributed actors
 
 A typical actor implementation in C++ involves:
+
 1. An actor base class that defines the interface for receiving and processing messages
 2. A message queue (mailbox) for each actor to store incoming messages
 3. A scheduler that assigns actors to threads when they have messages to process
 4. Concrete actor classes that inherit from the base and implement specific behavior
 
 Consider a simplified actor framework:
+
 ```cpp
 // Message base class
 class Message {
@@ -113,24 +122,24 @@ public:
     virtual ~Actor() {
         stop();
     }
-    
+
     // Send a message to this actor (thread-safe)
     void send(std::unique_ptr<Message> msg) {
-    
+
     // Send a message to this actor (thread-safe)
     void send(std::unique_ptr<Message> msg) {
         std::lock_guard<std::mutex> lock(queue_mutex_);
         message_queue_.push(std::move(msg));
         condition_.notify_one();
     }
-    
+
     // Start the actor's message processing loop
     void start() {
         bool expected = false;
         if (!running_.compare_exchange_strong(expected, true)) return;
         processing_thread_ = std::thread(&Actor::processMessages, this);
     }
-    
+
     // Stop the actor
     void stop() {
         {
@@ -142,11 +151,11 @@ public:
             processing_thread_.join();
         }
     }
-    
+
 protected:
     // Pure virtual function to process a message
     virtual void onReceive(std::unique_ptr<Message> msg) = 0;
-    
+
 private:
     void processMessages() {
         while (true) {
@@ -165,7 +174,7 @@ private:
             }
         }
     }
-    
+
     std::queue<std::unique_ptr<Message>> message_queue_;
     std::mutex queue_mutex_;
     std::condition_variable condition_;
@@ -175,12 +184,14 @@ private:
 ```
 
 This basic implementation shows the core concepts:
+
 - Actors encapsulate their state (the message queue and processing thread)
 - Communication happens exclusively through message passing (the send method)
 - Each actor processes messages sequentially in its own thread
 - The onReceive method must be implemented by concrete actors to define their behavior
 
 However, production-ready actor frameworks need additional features:
+
 - **Message routing**: Ability to send messages to specific actors by address/reference
 - **Supervision hierarchies**: Mechanisms for handling actor failures
 - **Routing logic**: More sophisticated mailbox implementations (priority queues, etc.)
@@ -191,6 +202,7 @@ However, production-ready actor frameworks need additional features:
 Popular C++ actor frameworks like CAF (C++ Actor Framework) or SObjectizer provide these advanced features while maintaining the core Actor model principles.
 
 Benefits of the Actor model include:
+
 - **Elimination of common concurrency bugs**: No shared state means no data races
 - **Natural fit for distributed systems**: Message passing works well across network boundaries
 - **Scalability**: Easy to add more actors to handle increased load
@@ -198,6 +210,7 @@ Benefits of the Actor model include:
 - **Location transparency**: Actors can be moved between processes or machines without changing code
 
 Challenges and considerations:
+
 - **Performance overhead**: Message passing involves memory allocation and copying
 - **Learning curve**: Developers must shift from shared-state to message-passing thinking
 - **Debugging complexity**: Asynchronous message flows can be harder to trace
@@ -205,6 +218,7 @@ Challenges and considerations:
 - **Deadlock possibilities**: Circular waiting patterns can still occur with message dependencies
 
 The Actor model shines in applications like:
+
 - **Concurrent servers**: Handling multiple client connections
 - **Game development**: Managing game entities and systems
 - **Financial systems**: Processing market data feeds
@@ -212,6 +226,7 @@ The Actor model shines in applications like:
 - **Workflow systems**: Coordinating multi-step processes
 
 When compared to other concurrency approaches:
+
 - **vs. Thread pools with shared queues**: Actors provide better encapsulation and reduce contention
 - **vs. Lock-based data structures**: Actors eliminate lock contention entirely
 - **vs. Futures/promises**: Actors are better suited for long-lived, stateful computations
@@ -335,11 +350,9 @@ Internally, `shared_future` reference-counts the shared state. The state is dest
 
 ### Future continuations (C++20 and beyond)
 
-### Future continuations (C++20 and beyond)
-
 While C++20 did not standardize `.then()` continuations, the C++23 standard introduces the Sender/Receiver model (P2300) as a powerful, unified framework for asynchronous composition. This model generalizes the concept of futures by decoupling the creation of work (senders) from its execution (receivers).
 
-```cpp
+````cpp
 // Conceptual example of the Sender/Receiver model (P2300)
 auto sender = async_operation() | then([](auto val) {
     return process(val);
@@ -351,7 +364,7 @@ future.then([](auto f) {
     auto val = f.get();
     return process(val);
 });
-```
+````
 
 While standard C++ continues to evolve in this direction, the basic promise-future model remains the foundation. For production code that requires complex asynchronous pipelines, libraries like Folly Futures, HPX, or Boost.Asio provide richer continuation and composition support.
 
